@@ -81,7 +81,12 @@ function fullName(userData) {
 function primaryPhone(userData) {
   const primaryId = userData.primary_phone_number_id;
   const found = userData.phone_numbers?.find((p) => p.id === primaryId);
-  return found?.phone_number ?? userData.phone_numbers?.[0]?.phone_number ?? null;
+  return (
+    found?.phone_number ??
+    userData.phone_numbers?.[0]?.phone_number ??
+    userData.unsafe_metadata?.phone ??
+    null
+  );
 }
 
 async function upsertUser(userData) {
@@ -91,20 +96,50 @@ async function upsertUser(userData) {
     return;
   }
 
+  const isProfessional = userData.unsafe_metadata?.tipo === 'profissional';
+
   const payload = {
     clerk_user_id: userData.id,
     email,
     full_name: fullName(userData),
     phone: primaryPhone(userData),
     avatar_url: userData.image_url ?? null,
+    is_professional: isProfessional,
   };
 
-  const { error } = await supabaseAdmin
+  const { data: userRow, error } = await supabaseAdmin
     .from('users')
-    .upsert(payload, { onConflict: 'clerk_user_id' });
+    .upsert(payload, { onConflict: 'clerk_user_id' })
+    .select('id')
+    .single();
 
-  if (error) throw error;
-  logger.info({ clerkUserId: userData.id, email }, 'Synced user');
+  if (error) {
+    logger.error({ err: error, clerkUserId: userData.id }, 'Failed to upsert user');
+    throw error;
+  }
+  logger.info({ clerkUserId: userData.id, email, uuid: userRow?.id }, 'Synced user');
+
+  if (isProfessional && userRow) {
+    const rawRadius = userData.unsafe_metadata?.serviceRadius;
+    const serviceRadius = rawRadius ? parseInt(rawRadius, 10) : 5;
+
+    const profPayload = {
+      user_id: userRow.id,
+      bio: userData.unsafe_metadata?.bio ?? null,
+      base_city: userData.unsafe_metadata?.baseCity ?? null,
+      service_radius_km: isNaN(serviceRadius) ? 5 : serviceRadius,
+    };
+
+    const { error: profError } = await supabaseAdmin
+      .from('professional_profiles')
+      .upsert(profPayload, { onConflict: 'user_id' });
+
+    if (profError) {
+      logger.error({ err: profError, userId: userRow.id }, 'Failed to upsert professional profile');
+      throw profError;
+    }
+    logger.info({ userId: userRow.id }, 'Synced professional profile');
+  }
 }
 
 async function deleteUser(userData) {
