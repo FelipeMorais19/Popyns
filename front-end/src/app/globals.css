@@ -1,0 +1,901 @@
+@import "tailwindcss";
+
+:root {
+  --wine-800: #5C0331;
+  --wine-900: #3D0220;
+  --wine-700: #7A1A4A;
+  --cream-100: #F5EFE6;
+  --cream-50: #FBF7F0;
+  --warm-100: #EFE0D0;
+  --rose-200: #EAC8C0;
+  --rose-300: #D9A89E;
+  --rose-400: #C9A29A;
+  --rose-500: #C28A7E;
+  --ink-900: #1F1014;
+  --ink-500: #7A5862;
+  --ink-placeholder: #B7A2A8;
+  --success-700: #4E7A4A;
+
+  --gradient-wine: linear-gradient(165deg, #5C0331 0%, #3D0220 100%);
+  --gradient-warm: linear-gradient(170deg, #FBF7F0 0%, #EFE0D0 100%);
+  --gradient-rose: linear-gradient(135deg, #D9A89E 0%, #C28A7E 100%);
+}
+
+@theme inline {
+  --color-wine-700: var(--wine-700);
+  --color-wine-800: var(--wine-800);
+  --color-wine-900: var(--wine-900);
+  --color-cream-50: var(--cream-50);
+  --color-cream-100: var(--cream-100);
+  --color-rose-200: var(--rose-200);
+  --color-ink-500: var(--ink-500);
+  --color-ink-900: var(--ink-900);
+
+  --font-poppins: var(--font-poppins);
+  --font-cormorant: var(--font-cormorant);
+  --font-manrope: var(--font-manrope);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--wine-900);
+  color: var(--cream-100);
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bg-wine-gradient {
+  background-image: var(--gradient-wine);
+}
+
+.bg-warm-gradient {
+  background-image: var(--gradient-warm);
+}
+
+.bg-rose-gradient {
+  background-image: var(--gradient-rose);
+}
+
+.halo-rose::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, rgba(234, 200, 192, 0.16) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ===========================================================
+   Clerk — overrides defensivos
+   - Tira fundo/borda/sombra de qualquer wrapper interno
+   - Esconde "Secured by Clerk" e banner de Development Mode
+   - Garante hierarquia visual mesmo se elements falhar
+   =========================================================== */
+
+.cl-rootBox,
+.cl-rootBox *,
+.cl-rootBox *::before,
+.cl-rootBox *::after {
+  font-family: var(--font-manrope), system-ui, sans-serif;
+}
+
+/* Nukea backdrop-filter (blur) e box-shadow em TUDO dentro do Clerk.
+   Inputs/botões/alerts mantêm seus estilos via regras mais específicas abaixo. */
+.cl-rootBox,
+.cl-rootBox * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Zerar background de wrappers/containers (mas NÃO de inputs, botões, etc.) */
+.cl-rootBox,
+.cl-rootBox > div,
+.cl-rootBox > div > div,
+.cl-rootBox [class*="cl-card"],
+.cl-rootBox [class*="cl-main"],
+.cl-rootBox [class*="cl-header"],
+.cl-rootBox [class*="cl-footer"],
+.cl-rootBox [class*="cl-internal"]:not(button):not(input):not([class*="identityPreview"]):not([class*="alert"]):not([class*="socialButtons"]):not([class*="socialButton"]) {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Cards principais sem padding pra encostarem nas bordas do nosso painel */
+.cl-rootBox .cl-cardBox,
+.cl-rootBox .cl-card {
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  overflow: visible !important;
+}
+
+/* Evitar que wrappers internos do Clerk recortem conteúdo ("cilindro invisível") */
+.cl-rootBox,
+.cl-rootBox > div,
+.cl-rootBox .cl-cardBox,
+.cl-rootBox .cl-cardBox > *,
+.cl-rootBox .cl-card,
+.cl-rootBox .cl-card > *,
+.cl-rootBox [class*="cl-main"],
+.cl-rootBox [class*="cl-form"] {
+  overflow: visible !important;
+  border-radius: 0 !important;
+}
+
+/* Identity preview (caixa que mostra o email durante a verificação) */
+.cl-rootBox .cl-identityPreview,
+.cl-rootBox [class*="identityPreview"] {
+  background-color: rgba(245, 239, 230, 0.10) !important;
+  border: 1px solid rgba(245, 239, 230, 0.20) !important;
+  border-radius: 16px !important;
+  padding: 10px 16px !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Container do OTP - 6 cells de código */
+.cl-rootBox .cl-otpCodeField,
+.cl-rootBox [class*="otpCodeField"]:not(input) {
+  background: transparent !important;
+  display: flex !important;
+  gap: 8px !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+/* Link de "reenviar código" */
+.cl-rootBox .cl-formResendCodeLink,
+.cl-rootBox [class*="resendCode"] {
+  color: var(--rose-200) !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  background: transparent !important;
+  text-decoration: none !important;
+}
+.cl-rootBox .cl-formResendCodeLink:hover {
+  text-decoration: underline !important;
+  text-underline-offset: 4px !important;
+}
+
+/* Botão de "use outro método" / "voltar" no fluxo de verificação */
+.cl-rootBox .cl-formButtonReset,
+.cl-rootBox [class*="formButtonReset"],
+.cl-rootBox button[class*="alternativeMethods"] {
+  background: transparent !important;
+  border: 1px solid rgba(245, 239, 230, 0.30) !important;
+  border-radius: 16px !important;
+  color: var(--cream-100) !important;
+  height: 48px !important;
+}
+
+.cl-rootBox .cl-internal-1k7f9as,
+.cl-rootBox [class*="cl-internal"][class*="brand"],
+.cl-rootBox [class*="cl-internal"][class*="Brand"],
+.cl-rootBox [class*="cl-internal"][class*="poweredBy"],
+.cl-rootBox [class*="cl-internal"][class*="logo"]:not(.cl-socialButtonsProviderIcon):not([class*="socialButtons"]):not([class*="providerIcon"]),
+.cl-rootBox a[href*="clerk.com"],
+.cl-rootBox a[href*="dashboard.clerk"] {
+  display: none !important;
+}
+
+/* Garantir que ícones dos providers sociais (Google, etc.) fiquem visíveis */
+.cl-rootBox .cl-socialButtonsProviderIcon,
+.cl-rootBox .cl-socialButtonsProviderIcon img,
+.cl-rootBox .cl-socialButtonsProviderIcon svg,
+.cl-rootBox [class*="socialButtonsProviderIcon"],
+.cl-rootBox [class*="socialButtonsProviderIcon"] img,
+.cl-rootBox [class*="socialButtonsProviderIcon"] svg {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* "Development mode" / "Keyless mode" banner — Clerk renderiza via portal
+   fora do .cl-rootBox, geralmente no body. */
+.cl-keyless-banner,
+.cl-keylessBanner,
+[class*="cl-"][class*="keyless"],
+[class*="cl-"][class*="developmentBanner"],
+[class*="cl-"][class*="developmentMode"],
+[class*="cl-"][class*="DevelopmentMode"],
+[data-clerk-development-mode-warning],
+[data-clerk-keyless-prompt] {
+  display: none !important;
+}
+
+/* Hide any fixed banners Clerk drops directly under body */
+body > div[class*="cl-"][class*="banner"],
+body > div[class*="cl-"][style*="position: fixed"]:has(a[href*="clerk.com"]) {
+  display: none !important;
+}
+
+/* Inputs: garantir pill + cream/10 */
+.cl-rootBox input[type="text"],
+.cl-rootBox input[type="email"],
+.cl-rootBox input[type="tel"],
+.cl-rootBox input[type="password"],
+.cl-rootBox input[type="number"],
+.cl-rootBox input[inputmode] {
+  height: 48px !important;
+  border-radius: 16px !important;
+  background-color: rgba(245, 239, 230, 0.10) !important;
+  border: 1px solid rgba(245, 239, 230, 0.20) !important;
+  color: var(--cream-100) !important;
+  padding: 0 18px !important;
+  font-size: 14px !important;
+}
+
+/* Botões internos do Clerk: mesmo raio dos inputs (16px) */
+.cl-rootBox .cl-socialButtonsBlockButton,
+.cl-rootBox .cl-formButtonPrimary,
+.cl-rootBox button[data-localization-key*="formButton"] {
+  border-radius: 16px !important;
+}
+
+/* ─── Estilizar badge "último uso" do Clerk ───────────────────────────────
+   O badge é renderizado sobre o botão social. Nós o estilizamos como uma pílula
+   elegante e legível com alto contraste, integrada à estética da POPYNS. */
+
+/* Esconde setas do botão de bloco */
+.cl-rootBox .cl-socialButtonsBlockButtonArrow,
+.cl-rootBox [class*="BlockButtonArrow"] {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Estilo premium da pílula do badge */
+.cl-rootBox .cl-socialButtonsBlockButtonBadge,
+.cl-rootBox [class*="socialButtonsBlockButtonBadge"],
+.cl-rootBox .cl-badge,
+.cl-rootBox [class*="cl-badge"],
+.cl-rootBox [data-localization-key*="badge"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  color: var(--rose-200) !important;
+  background-color: var(--wine-800) !important;
+  border: 1px solid rgba(245, 239, 230, 0.20) !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  padding: 2px 10px !important;
+  border-radius: 9999px !important;
+  position: absolute !important;
+  top: -8px !important;
+  right: 16px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+  z-index: 10 !important;
+  line-height: 1.2 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+}
+
+/* Garante que o container do botão mantenha overflow visível para o badge aparecer */
+.cl-rootBox li:has(.cl-socialButtonsBlockButton),
+.cl-rootBox div:has(> .cl-socialButtonsBlockButton) {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.cl-rootBox input::placeholder {
+  color: rgba(245, 239, 230, 0.35) !important;
+}
+
+.cl-rootBox input:focus,
+.cl-rootBox input:focus-visible {
+  outline: none !important;
+  border-color: rgba(245, 239, 230, 0.5) !important;
+  box-shadow: none !important;
+}
+
+/* Divider line + texto */
+.cl-rootBox .cl-dividerLine {
+  background: rgba(245, 239, 230, 0.20) !important;
+}
+.cl-rootBox .cl-dividerText {
+  color: rgba(245, 239, 230, 0.55) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.18em !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+}
+
+/* Phone input — seletor de país (BR / +55) precisa herdar a cor cream */
+.cl-rootBox .cl-phoneInputBox,
+.cl-rootBox [class*="phoneInputBox"],
+.cl-rootBox [class*="PhoneInput"] {
+  background-color: rgba(245, 239, 230, 0.10) !important;
+  border: 1px solid rgba(245, 239, 230, 0.20) !important;
+  border-radius: 16px !important;
+  color: var(--cream-100) !important;
+  overflow: hidden !important;
+}
+
+.cl-rootBox .cl-phoneInputBox input,
+.cl-rootBox [class*="phoneInputBox"] input,
+.cl-rootBox [class*="PhoneInput"] input {
+  background: transparent !important;
+  border: none !important;
+  color: var(--cream-100) !important;
+}
+
+.cl-rootBox .cl-selectButton,
+.cl-rootBox [class*="selectButton"],
+.cl-rootBox button[role="combobox"],
+.cl-rootBox button[aria-haspopup="listbox"] {
+  background: transparent !important;
+  border: none !important;
+  color: var(--cream-100) !important;
+}
+
+.cl-rootBox .cl-selectButton *,
+.cl-rootBox [class*="selectButton"] *,
+.cl-rootBox button[role="combobox"] *,
+.cl-rootBox button[aria-haspopup="listbox"] *,
+.cl-rootBox .cl-phoneInputBox span,
+.cl-rootBox .cl-phoneInputBox svg {
+  color: var(--cream-100) !important;
+  fill: var(--cream-100) !important;
+  stroke: var(--cream-100) !important;
+}
+
+/* Dropdown da lista de países */
+.cl-rootBox .cl-selectOptionsContainer,
+.cl-rootBox [class*="selectOptions"],
+.cl-rootBox [role="listbox"],
+[class*="cl-"][role="listbox"],
+[data-floating-ui-portal] [role="listbox"] {
+  background-color: #3D0220 !important;
+  border: 1px solid rgba(245, 239, 230, 0.20) !important;
+  border-radius: 16px !important;
+  color: var(--cream-100) !important;
+  box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.6) !important;
+}
+
+[role="option"],
+.cl-rootBox [role="option"],
+.cl-rootBox [class*="selectOption"],
+[class*="cl-"] [role="option"] {
+  color: var(--cream-100) !important;
+  background: transparent !important;
+}
+
+[role="option"]:hover,
+[role="option"][data-highlighted="true"],
+[role="option"][aria-selected="true"],
+.cl-rootBox [role="option"]:hover,
+[class*="cl-"] [role="option"]:hover {
+  background-color: rgba(245, 239, 230, 0.08) !important;
+  color: var(--cream-100) !important;
+}
+
+/* Input de busca dentro do dropdown */
+.cl-rootBox [class*="selectSearch"] input,
+.cl-rootBox input[placeholder*="Search"],
+.cl-rootBox input[placeholder*="search"],
+.cl-rootBox input[placeholder*="Procurar"],
+.cl-rootBox input[placeholder*="Pesquisar"],
+[class*="cl-"] input[type="search"] {
+  background-color: rgba(245, 239, 230, 0.06) !important;
+  color: var(--cream-100) !important;
+  border: 1px solid rgba(245, 239, 230, 0.20) !important;
+  border-radius: 12px !important;
+}
+
+/* Cloudflare Turnstile — garantir tap funcional no mobile
+   Problemas comuns: pointer-events bloqueado por parent, z-index baixo, overflow do parent. */
+.cl-rootBox .cl-captchaContainer,
+.cl-rootBox [class*="captcha"] {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0.75rem auto !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  position: relative !important;
+  z-index: 50 !important;
+  -webkit-tap-highlight-color: rgba(245, 239, 230, 0.15);
+}
+
+.cl-rootBox iframe[src*="challenges.cloudflare.com"],
+.cl-rootBox iframe[src*="turnstile"],
+iframe[src*="challenges.cloudflare.com"],
+iframe[src*="turnstile"] {
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  display: block !important;
+  border: none !important;
+  border-radius: 12px !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  position: relative !important;
+  z-index: 50 !important;
+  -webkit-user-select: auto !important;
+  user-select: auto !important;
+}
+
+/* Garante que o overlay do desafio (modal cloudflare) fica por cima de tudo
+   Quando o usuário toca, Cloudflare abre um portal acima de qualquer container */
+body > div[id^="cf-chl"],
+body > iframe[src*="challenges.cloudflare.com"],
+body > div[class*="cf-turnstile"] {
+  position: fixed !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+/* OTP cells */
+.cl-rootBox .cl-otpCodeFieldInput {
+  height: 48px !important;
+  width: 40px !important;
+  border-radius: 12px !important;
+  background-color: rgba(245, 239, 230, 0.10) !important;
+  border: 1px solid rgba(245, 239, 230, 0.20) !important;
+  color: var(--cream-100) !important;
+  text-align: center !important;
+  font-size: 16px !important;
+}
+
+/* ===========================================================
+   Estilos Legais — Termos de Uso e Política de Privacidade
+   Design Premium POPYNS (Wine & Cream)
+   =========================================================== */
+
+.legal-page {
+  position: relative;
+  min-height: 100vh;
+  background-image: var(--gradient-wine);
+  color: var(--cream-100);
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.25rem 3rem;
+  counter-reset: legal-section;
+  overflow-x: hidden;
+}
+
+/* Halo decorativo no topo */
+.legal-page::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  width: 120%;
+  max-width: 1100px;
+  height: 600px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse at center top,
+    rgba(234, 200, 192, 0.14) 0%,
+    rgba(234, 200, 192, 0.04) 35%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (min-width: 768px) {
+  .legal-page {
+    padding: 3.5rem 2rem 4rem;
+  }
+}
+
+.legal-header {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto 3rem auto;
+}
+
+.legal-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--rose-200);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  padding: 0.5rem 0.875rem 0.5rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(234, 200, 192, 0.18);
+  background: rgba(245, 239, 230, 0.03);
+  transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.legal-back:hover {
+  background: rgba(245, 239, 230, 0.06);
+  border-color: rgba(234, 200, 192, 0.35);
+  transform: translateX(-2px);
+}
+
+.legal-back svg {
+  width: 16px;
+  height: 16px;
+}
+
+.legal-title-block {
+  margin-top: 2.5rem;
+  position: relative;
+  padding-bottom: 2.25rem;
+}
+
+.legal-title-block::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 64px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--rose-200) 0%, transparent 100%);
+  border-radius: 2px;
+}
+
+.legal-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: var(--rose-200);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  margin-bottom: 1rem;
+}
+
+.legal-label::before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background-color: var(--rose-200);
+}
+
+.legal-title {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-style: italic;
+  font-size: 2.5rem;
+  line-height: 1.05;
+  font-weight: 500;
+  color: var(--cream-100);
+  margin-bottom: 0.875rem;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 768px) {
+  .legal-title {
+    font-size: 3.25rem;
+  }
+}
+
+.legal-updated {
+  color: rgba(245, 239, 230, 0.5);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.legal-content {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  flex: 1;
+}
+
+.legal-section {
+  position: relative;
+  margin-bottom: 2.25rem;
+  padding: 1.75rem 1.5rem;
+  line-height: 1.75;
+  font-size: 0.9375rem;
+  color: rgba(245, 239, 230, 0.82);
+  background: rgba(245, 239, 230, 0.025);
+  border: 1px solid rgba(245, 239, 230, 0.07);
+  border-radius: 20px;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.legal-section:hover {
+  background: rgba(245, 239, 230, 0.035);
+  border-color: rgba(245, 239, 230, 0.11);
+}
+
+@media (min-width: 768px) {
+  .legal-section {
+    padding: 2.25rem 2rem;
+  }
+}
+
+.legal-section p {
+  margin-bottom: 1rem;
+}
+
+.legal-section p:last-child {
+  margin-bottom: 0;
+}
+
+.legal-section strong {
+  color: var(--cream-100);
+  font-weight: 600;
+}
+
+/* Primeira seção (preâmbulo) — sem moldura, com tipografia maior */
+.legal-section:first-child {
+  background: transparent;
+  border: none;
+  padding: 0 0 1.75rem 0;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(245, 239, 230, 0.08);
+  border-radius: 0;
+}
+
+.legal-section:first-child:hover {
+  background: transparent;
+}
+
+.legal-intro {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-style: italic;
+  font-size: 1.25rem;
+  line-height: 1.55;
+  color: var(--cream-100);
+  letter-spacing: -0.005em;
+}
+
+@media (min-width: 768px) {
+  .legal-intro {
+    font-size: 1.375rem;
+  }
+}
+
+.legal-h2 {
+  counter-increment: legal-section;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-style: italic;
+  font-size: 1.625rem;
+  font-weight: 500;
+  color: var(--cream-100);
+  margin: -0.25rem 0 1.5rem 0;
+  padding-bottom: 1rem;
+  padding-left: 3.5rem;
+  border-bottom: 1px solid rgba(245, 239, 230, 0.08);
+  position: relative;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  min-height: 2.5rem;
+}
+
+.legal-h2::before {
+  content: counter(legal-section, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: rgba(234, 200, 192, 0.12);
+  border: 1px solid rgba(234, 200, 192, 0.28);
+  color: var(--rose-200);
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+}
+
+.legal-h3 {
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--rose-200);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-top: 1.75rem;
+  margin-bottom: 0.875rem;
+}
+
+.legal-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 1.25rem;
+}
+
+.legal-list li {
+  position: relative;
+  padding-left: 1.75rem;
+  margin-bottom: 0.875rem;
+}
+
+.legal-list li::before {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  top: 0.6rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--rose-200);
+  box-shadow: 0 0 0 3px rgba(234, 200, 192, 0.12);
+}
+
+.legal-contact {
+  background: linear-gradient(
+    160deg,
+    rgba(234, 200, 192, 0.08) 0%,
+    rgba(245, 239, 230, 0.03) 100%
+  );
+  border: 1px solid rgba(234, 200, 192, 0.18);
+  border-radius: 18px;
+  padding: 1.5rem;
+  margin: 1.5rem 0 1.25rem;
+}
+
+.legal-contact p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9375rem;
+}
+
+.legal-contact p:last-child {
+  margin-bottom: 0;
+}
+
+.legal-contact p:first-child strong {
+  display: block;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-style: italic;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--cream-100);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.005em;
+}
+
+.legal-link {
+  color: var(--rose-200);
+  text-decoration: underline;
+  text-decoration-color: rgba(234, 200, 192, 0.35);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.legal-link:hover {
+  color: var(--cream-100);
+  text-decoration-color: var(--cream-100);
+}
+
+.legal-table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 16px;
+  border: 1px solid rgba(245, 239, 230, 0.1);
+  background-color: rgba(245, 239, 230, 0.02);
+  -webkit-overflow-scrolling: touch;
+}
+
+.legal-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+  min-width: 480px;
+}
+
+.legal-table th,
+.legal-table td {
+  padding: 0.9375rem 1.25rem;
+  border-bottom: 1px solid rgba(245, 239, 230, 0.08);
+  vertical-align: top;
+}
+
+.legal-table th {
+  background-color: rgba(234, 200, 192, 0.06);
+  color: var(--rose-200);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+}
+
+.legal-table tbody tr {
+  transition: background-color 0.18s ease;
+}
+
+.legal-table tbody tr:hover {
+  background-color: rgba(245, 239, 230, 0.03);
+}
+
+.legal-table tr:last-child td {
+  border-bottom: none;
+}
+
+.legal-table td:last-child {
+  color: rgba(245, 239, 230, 0.7);
+  font-size: 0.8125rem;
+}
+
+.legal-page abbr[title] {
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(234, 200, 192, 0.5);
+  cursor: help;
+}
+
+.legal-footer {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  width: 100%;
+  margin: 3.5rem auto 0 auto;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(245, 239, 230, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.8125rem;
+  color: rgba(245, 239, 230, 0.5);
+}
+
+.legal-footer p {
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.legal-footer .legal-link {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(234, 200, 192, 0.25);
+  border-radius: 999px;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.legal-footer .legal-link:hover {
+  background-color: rgba(234, 200, 192, 0.08);
+  border-color: var(--rose-200);
+  color: var(--cream-100);
+}
+
+@media (min-width: 640px) {
+  .legal-footer {
+    flex-direction: row;
+  }
+}
