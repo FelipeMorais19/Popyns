@@ -194,9 +194,13 @@ export function StepNome({
             label="Instagram / Portfólio"
             icon={<IconInstagram size={16} />}
             type="text"
-            placeholder="@usuario ou link"
+            placeholder="@usuario"
             value={instagram}
-            onChange={(e) => onInstagramChange(e.target.value)}
+            onChange={(e) => {
+              const raw = e.target.value;
+              const val = raw === "" ? "" : raw.startsWith("@") ? raw : `@${raw}`;
+              onInstagramChange(val);
+            }}
             valid={instagram.trim().length > 0}
           />
         </>

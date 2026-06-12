@@ -1,6 +1,11 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
-export default clerkMiddleware();
+// clockSkewInMs: tolera desvio de até 5min entre o relógio local e tokens Clerk.
+// Necessário quando o NTP do Windows está desincronizado.
+export default clerkMiddleware(
+  async () => {},
+  { clockSkewInMs: 300_000 },
+);
 
 export const config = {
   matcher: [

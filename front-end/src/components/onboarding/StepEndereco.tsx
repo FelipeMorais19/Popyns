@@ -4,21 +4,20 @@ import { ChangeEvent, useEffect, useRef } from "react";
 import { Field } from "./Field";
 import { IconHash, IconHome, IconLayers, IconPin } from "./icons";
 import { AccountType } from "./StepTipo";
-import { Select } from "./Select";
 
 type StepEnderecoProps = {
   cep: string;
   endereco: string;
   numero: string;
   complemento: string;
-  especialidade: string;
+  especialidade: string[];
   raioAtendimento: string;
   cidadeBase: string;
   onCepChange: (value: string) => void;
   onEnderecoChange: (value: string) => void;
   onNumeroChange: (value: string) => void;
   onComplementoChange: (value: string) => void;
-  onEspecialidadeChange: (value: string) => void;
+  onEspecialidadeChange: (value: string[]) => void;
   onRaioAtendimentoChange: (value: string) => void;
   onCidadeBaseChange: (value: string) => void;
   tipo?: AccountType;
@@ -40,17 +39,8 @@ const CATEGORIES = [
   { id: "depilacao", name: "Depilação" },
   { id: "sobrancelha_cilios", name: "Sobrancelha / Cílios" },
   { id: "massagem_estetica", name: "Massagem / Estética" },
-  { id: "limpeza_domestica", name: "Limpeza Doméstica" },
 ];
 
-const RADII = [
-  { value: "5", label: "5 km" },
-  { value: "10", label: "10 km" },
-  { value: "15", label: "15 km" },
-  { value: "20", label: "20 km" },
-  { value: "30", label: "30 km" },
-  { value: "50", label: "50 km" },
-];
 
 function maskCep(raw: string): string {
   const digits = raw.replace(/\D/g, "").slice(0, 8);
@@ -70,8 +60,8 @@ export function isValidNumero(value: string): boolean {
   return value.trim().length >= 1;
 }
 
-export function isValidEspecialidade(value: string): boolean {
-  return value.trim().length > 0;
+export function isValidEspecialidade(value: string[]): boolean {
+  return value.length > 0;
 }
 
 export function isValidRaioAtendimento(value: string): boolean {
@@ -196,29 +186,6 @@ export function StepEndereco({
 
       {isProfissional && (
         <>
-          <Select
-            label="Especialidade *"
-            icon={<IconLayers size={16} />}
-            value={especialidade}
-            onChange={onEspecialidadeChange}
-            options={CATEGORIES.map((cat) => ({
-              value: cat.id,
-              label: cat.name,
-            }))}
-            placeholder="Selecione sua especialidade..."
-            valid={isValidEspecialidade(especialidade)}
-          />
-
-          <Select
-            label="Raio de Atendimento *"
-            icon={<IconPin size={16} />}
-            value={raioAtendimento}
-            onChange={onRaioAtendimentoChange}
-            options={RADII}
-            placeholder="Selecione o raio máximo..."
-            valid={isValidRaioAtendimento(raioAtendimento)}
-          />
-
           <Field
             label="Cidade Base de Atendimento *"
             icon={<IconPin size={16} />}
@@ -228,6 +195,89 @@ export function StepEndereco({
             onChange={(e) => onCidadeBaseChange(e.target.value)}
             valid={isValidCidadeBase(cidadeBase)}
           />
+
+          {/* Slider de raio de atendimento */}
+          <div className="flex flex-col gap-3">
+            <style dangerouslySetInnerHTML={{ __html: `
+              .raio-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 2px; outline: none; cursor: pointer; background: linear-gradient(to right, var(--wine-800) 0%, var(--wine-800) ${((parseInt(raioAtendimento || "10") - 1) / 49) * 100}%, rgba(92,3,49,0.15) ${((parseInt(raioAtendimento || "10") - 1) / 49) * 100}%, rgba(92,3,49,0.15) 100%); }
+              .raio-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--wine-800); cursor: pointer; box-shadow: 0 2px 8px rgba(92,3,49,0.35); border: 2px solid white; }
+              .raio-slider::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--wine-800); cursor: pointer; box-shadow: 0 2px 8px rgba(92,3,49,0.35); border: 2px solid white; }
+            ` }} />
+            <div className="flex items-center justify-between">
+              <span
+                className="text-[11px] font-semibold uppercase tracking-wider"
+                style={{ color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}
+              >
+                Raio de Atendimento *
+              </span>
+              <span
+                className="text-[15px] font-bold"
+                style={{ color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}
+              >
+                {raioAtendimento || "10"} km
+              </span>
+            </div>
+            <input
+              type="range"
+              min="1"
+              max="50"
+              step="1"
+              value={raioAtendimento || "10"}
+              onChange={(e) => onRaioAtendimentoChange(e.target.value)}
+              className="raio-slider"
+            />
+            <div
+              className="flex justify-between text-[10px]"
+              style={{ color: "rgba(92,3,49,0.4)", fontFamily: "var(--font-manrope)" }}
+            >
+              <span>1 km</span>
+              <span>50 km</span>
+            </div>
+          </div>
+
+          {/* Multi-select de especialidades */}
+          <div className="flex flex-col gap-2">
+            <span
+              className="text-[11px] font-semibold uppercase tracking-wider"
+              style={{ color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}
+            >
+              Especialidades *
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.map((cat) => {
+                const selected = especialidade.includes(cat.id);
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => {
+                      const next = selected
+                        ? especialidade.filter((id) => id !== cat.id)
+                        : [...especialidade, cat.id];
+                      onEspecialidadeChange(next);
+                    }}
+                    className="rounded-full px-4 py-2 text-[12px] font-semibold transition-all"
+                    style={{
+                      fontFamily: "var(--font-manrope)",
+                      background: selected ? "var(--wine-800)" : "rgba(92,3,49,0.06)",
+                      color: selected ? "var(--cream-100)" : "var(--wine-800)",
+                      border: `1.5px solid ${selected ? "var(--wine-800)" : "rgba(92,3,49,0.2)"}`,
+                    }}
+                  >
+                    {cat.name}
+                  </button>
+                );
+              })}
+            </div>
+            {!isValidEspecialidade(especialidade) && (
+              <p
+                className="text-[11px]"
+                style={{ color: "rgba(92,3,49,0.5)", fontFamily: "var(--font-manrope)" }}
+              >
+                Selecione ao menos uma especialidade.
+              </p>
+            )}
+          </div>
         </>
       )}
 

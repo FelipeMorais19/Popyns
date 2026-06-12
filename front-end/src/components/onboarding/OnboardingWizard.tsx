@@ -37,7 +37,7 @@ type WizardState = {
   rg: string;
   bio: string;
   instagram: string;
-  especialidade: string;
+  especialidade: string[];
   raioAtendimento: string;
   cidadeBase: string;
   cep: string;
@@ -74,8 +74,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
       rg: "",
       bio: "",
       instagram: "",
-      especialidade: "",
-      raioAtendimento: "",
+      especialidade: [],
+      raioAtendimento: "10",
       cidadeBase: "",
       cep: "",
       endereco: "",
@@ -146,6 +146,32 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     let avatarStoragePath: string | null = null;
 
     try {
+      // Garante que existe linha em public.users ANTES de qualquer outra operação
+      // (upload de avatar, leituras futuras pelo ClientProfile, etc).
+      // A RLS policy users_insert_own aceita o INSERT desde que clerk_user_id
+      // bata com o sub do JWT do Clerk.
+      const email = user.primaryEmailAddress?.emailAddress;
+      if (email) {
+        const { error: upsertErr } = await supabase
+          .from("users")
+          .upsert(
+            {
+              clerk_user_id: user.id,
+              email,
+              full_name: [user.firstName, user.lastName].filter(Boolean).join(" ") || null,
+              phone: user.primaryPhoneNumber?.phoneNumber || null,
+              avatar_url: user.imageUrl || null,
+              is_professional: state.tipo === "profissional",
+            },
+            { onConflict: "clerk_user_id" },
+          );
+        if (upsertErr) {
+          console.error("Failed to upsert user in public.users:", upsertErr);
+        }
+      } else {
+        console.warn("Skipping users upsert: no primary email on Clerk user.");
+      }
+
       if (state.fotoFile) {
         // 1) Upload pro bucket popyns (canônico — usado na vitrine, perfil etc).
         const path = avatarPath(user.id, state.fotoFile);
