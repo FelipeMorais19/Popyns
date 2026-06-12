@@ -8,6 +8,7 @@ import { ForgotPasswordFlow } from "@/components/ForgotPasswordFlow";
 import { OnboardingWizard } from "@/components/onboarding/OnboardingWizard";
 import { PopynsLogoAnimated } from "@/components/PopynsLogoAnimated";
 import { ClientProfile } from "@/components/profile/ClientProfile";
+import { ProfessionalHome } from "@/components/professional/ProfessionalHome";
 
 type Appearance = NonNullable<
   React.ComponentProps<typeof SignIn>["appearance"]
@@ -541,6 +542,8 @@ export default function HomePage() {
       >
         {user?.unsafeMetadata?.tipo === "cliente" ? (
           <ClientProfile />
+        ) : user?.unsafeMetadata?.tipo === "profissional" ? (
+          <ProfessionalHome />
         ) : (
           <div className="flex flex-col items-center justify-center px-8">
             <h1
