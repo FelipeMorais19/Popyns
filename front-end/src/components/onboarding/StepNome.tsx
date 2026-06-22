@@ -1,24 +1,23 @@
 import { ChangeEvent } from "react";
 import { Field } from "./Field";
-import { IconCalendar, IconFileText, IconHash, IconInstagram, IconPhone, IconShield, IconUser } from "./icons";
+import { Select } from "./Select";
+import { IconCalendar, IconHash, IconPhone, IconShield, IconUser } from "./icons";
 import { AccountType } from "./StepTipo";
 
 type StepNomeProps = {
   nome: string;
   nascimento: string;
   celular: string;
+  genero: string;
   cpf: string;
   rg: string;
-  bio: string;
-  instagram: string;
   tipo?: AccountType;
   onNomeChange: (value: string) => void;
   onNascimentoChange: (value: string) => void;
   onCelularChange: (value: string) => void;
+  onGeneroChange: (value: string) => void;
   onCpfChange: (value: string) => void;
   onRgChange: (value: string) => void;
-  onBioChange: (value: string) => void;
-  onInstagramChange: (value: string) => void;
 };
 
 function maskNascimento(raw: string): string {
@@ -84,22 +83,26 @@ export function isValidRg(value: string): boolean {
   return digits.length >= 9;
 }
 
+const GENERO_OPTIONS = [
+  { value: "feminino", label: "Feminino" },
+  { value: "masculino", label: "Masculino" },
+  { value: "outro", label: "Outro" },
+];
+
 export function StepNome({
   nome,
   nascimento,
   celular,
+  genero,
   cpf,
   rg,
-  bio,
-  instagram,
   tipo,
   onNomeChange,
   onNascimentoChange,
   onCelularChange,
+  onGeneroChange,
   onCpfChange,
   onRgChange,
-  onBioChange,
-  onInstagramChange,
 }: StepNomeProps) {
   function handleNascimento(e: ChangeEvent<HTMLInputElement>) {
     onNascimentoChange(maskNascimento(e.target.value));
@@ -156,6 +159,16 @@ export function StepNome({
         valid={isValidCelular(celular)}
       />
 
+      <Select
+        label="Gênero *"
+        icon={<IconUser size={16} />}
+        value={genero}
+        onChange={onGeneroChange}
+        options={GENERO_OPTIONS}
+        placeholder="Selecione seu gênero"
+        valid={genero !== ""}
+      />
+
       {isProfissional && (
         <>
           <Field
@@ -180,29 +193,6 @@ export function StepNome({
             valid={isValidRg(rg)}
           />
 
-          <Field
-            label="Biografia / Apresentação"
-            icon={<IconFileText size={16} />}
-            type="text"
-            placeholder="Conte sobre sua experiência..."
-            value={bio}
-            onChange={(e) => onBioChange(e.target.value)}
-            valid={bio.trim().length > 0}
-          />
-
-          <Field
-            label="Instagram / Portfólio"
-            icon={<IconInstagram size={16} />}
-            type="text"
-            placeholder="@usuario"
-            value={instagram}
-            onChange={(e) => {
-              const raw = e.target.value;
-              const val = raw === "" ? "" : raw.startsWith("@") ? raw : `@${raw}`;
-              onInstagramChange(val);
-            }}
-            valid={instagram.trim().length > 0}
-          />
         </>
       )}
     </>
@@ -213,11 +203,12 @@ export const stepNomeValid = (
   nome: string,
   nascimento: string,
   celular: string,
+  genero: string,
   cpf: string,
   rg: string,
   tipo?: string,
 ) => {
-  const commonValid = isValidNome(nome) && isValidNascimento(nascimento) && isValidCelular(celular);
+  const commonValid = isValidNome(nome) && isValidNascimento(nascimento) && isValidCelular(celular) && genero !== "";
   if (tipo === "profissional") {
     return commonValid && isValidCpf(cpf) && isValidRg(rg);
   }

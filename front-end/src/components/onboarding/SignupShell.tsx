@@ -1,10 +1,9 @@
 import { ReactNode } from "react";
 import { IconArrowLeft, IconArrowRight } from "./icons";
 
-const TOTAL_STEPS = 4;
-
 type SignupShellProps = {
   step: number;
+  totalSteps: number;
   title: ReactNode;
   subtitle?: ReactNode;
   children: ReactNode;
@@ -17,6 +16,7 @@ type SignupShellProps = {
 
 export function SignupShell({
   step,
+  totalSteps,
   title,
   subtitle,
   children,
@@ -56,11 +56,11 @@ export function SignupShell({
                 color: "var(--wine-800)",
               }}
             >
-              Cadastro · Passo {step} de {TOTAL_STEPS}
+              Cadastro · Passo {step} de {totalSteps}
             </p>
 
             <div className="mt-3 flex gap-[6px]">
-              {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
+              {Array.from({ length: totalSteps }).map((_, i) => (
                 <div
                   key={i}
                   className="h-[3px] flex-1 rounded-[2px]"

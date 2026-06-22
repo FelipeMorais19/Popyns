@@ -18,13 +18,13 @@ const OPTIONS: CardOption[] = [
   {
     id: "cliente",
     Icon: IconUser,
-    title: "Quero ser atendida",
+    title: "Quero ser cliente",
     desc: "Marque manicure, cabelo, maquiagem e mais — em casa, na hora que quiser.",
   },
   {
     id: "profissional",
     Icon: IconBadge,
-    title: "Quero atender e ganhar",
+    title: "Quero ser profissional",
     desc: "Tenha agenda cheia, defina seus preços e receba toda semana. Vamos pedir seus documentos para verificação.",
   },
 ];

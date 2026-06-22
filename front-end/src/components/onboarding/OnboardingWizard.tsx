@@ -19,20 +19,27 @@ import {
   isValidEspecialidade,
   isValidRaioAtendimento,
   isValidCidadeBase,
+  ESPECIALIDADE_CATEGORIES,
 } from "./StepEndereco";
+import {
+  StepDocumentos,
+  stepDocumentosValid,
+  type DocCertificados,
+} from "./StepDocumentos";
 
 type OnboardingWizardProps = {
   onComplete: () => void;
 };
 
 type WizardState = {
-  step: 1 | 2 | 3 | 4;
+  step: 1 | 2 | 3 | 4 | 5 | 6;
   tipo: AccountType;
   fotoFile: File | null;
   fotoPreviewUrl: string | null;
   nome: string;
   nascimento: string;
   celular: string;
+  genero: string;
   cpf: string;
   rg: string;
   bio: string;
@@ -44,6 +51,9 @@ type WizardState = {
   endereco: string;
   numero: string;
   complemento: string;
+  docIdentidade: File | null;
+  docCertificados: DocCertificados;
+  docAntecedentes: File | null;
 };
 
 function initials(name: string): string {
@@ -70,6 +80,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
       nome: [user?.firstName, user?.lastName].filter(Boolean).join(" "),
       nascimento: "",
       celular: cleanPhone ? maskCelular(cleanPhone) : "",
+      genero: "",
       cpf: "",
       rg: "",
       bio: "",
@@ -81,6 +92,9 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
       endereco: "",
       numero: "",
       complemento: "",
+      docIdentidade: null,
+      docCertificados: {},
+      docAntecedentes: null,
     };
   });
 
@@ -110,6 +124,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           state.nome,
           state.nascimento,
           state.celular,
+          state.genero,
           state.cpf,
           state.rg,
           state.tipo,
@@ -122,20 +137,31 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         if (state.tipo === "profissional") {
           return (
             addressValid &&
-            isValidEspecialidade(state.especialidade) &&
             isValidRaioAtendimento(state.raioAtendimento) &&
             isValidCidadeBase(state.cidadeBase)
           );
         }
         return addressValid;
       }
+      case 5:
+        return isValidEspecialidade(state.especialidade);
+      case 6:
+        return stepDocumentosValid(
+          state.bio,
+          state.instagram,
+          state.especialidade,
+          state.docIdentidade,
+          state.docCertificados,
+          state.docAntecedentes,
+        );
     }
   }, [state]);
 
   async function handleNext() {
     if (!canAdvance) return;
 
-    if (state.step < 4) {
+    const maxStep = state.tipo === "profissional" ? 6 : 4;
+    if (state.step < maxStep) {
       setState((s) => ({ ...s, step: (s.step + 1) as WizardState["step"] }));
       return;
     }
@@ -216,6 +242,36 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         }
       }
 
+      // Upload dos documentos de verificação (profissional)
+      if (state.tipo === "profissional") {
+        const uploadDoc = async (file: File, path: string) => {
+          try {
+            await supabase.storage.from(SUPABASE_BUCKET).upload(path, file, {
+              upsert: true,
+              cacheControl: "3600",
+              contentType: file.type || undefined,
+            });
+          } catch (err) {
+            console.error(`Falha ao enviar documento ${path}:`, err);
+          }
+        };
+
+        if (state.docIdentidade) {
+          const ext = state.docIdentidade.name.split(".").pop() ?? "pdf";
+          await uploadDoc(state.docIdentidade, `${user.id}/documentos/identidade.${ext}`);
+        }
+        for (const [id, file] of Object.entries(state.docCertificados)) {
+          if (file) {
+            const ext = file.name.split(".").pop() ?? "pdf";
+            await uploadDoc(file, `${user.id}/documentos/certificados/${id}.${ext}`);
+          }
+        }
+        if (state.docAntecedentes) {
+          const ext = state.docAntecedentes.name.split(".").pop() ?? "pdf";
+          await uploadDoc(state.docAntecedentes, `${user.id}/documentos/antecedentes.${ext}`);
+        }
+      }
+
       const [firstName, ...rest] = state.nome.trim().split(/\s+/);
       const lastName = rest.join(" ");
       if (firstName && (firstName !== user.firstName || lastName !== user.lastName)) {
@@ -233,6 +289,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           onboardingComplete: true,
           tipo: state.tipo,
           nascimento: state.nascimento,
+          genero: state.genero,
           phone: state.celular.replace(/\D/g, ""),
           cep: state.cep,
           endereco: state.endereco,
@@ -266,12 +323,14 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     setState((s) => ({ ...s, step: (s.step - 1) as WizardState["step"] }));
   }
 
-  const isFinalStep = state.step === 4;
+  const maxStep = state.tipo === "profissional" ? 6 : 4;
+  const isFinalStep = state.step === maxStep;
 
   if (state.step === 1) {
     return (
       <SignupShell
         step={1}
+        totalSteps={maxStep}
         title="Como você vai usar a POPYNS?"
         subtitle="Você pode mudar depois — quem é profissional também pode pedir serviços como cliente."
         onBack={handleBack}
@@ -290,6 +349,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     return (
       <SignupShell
         step={2}
+        totalSteps={maxStep}
         title="Escolha uma foto sua"
         subtitle={
           state.tipo === "profissional"
@@ -313,6 +373,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     return (
       <SignupShell
         step={3}
+        totalSteps={maxStep}
         title={
           <>
             Conte um pouco
@@ -328,18 +389,99 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           nome={state.nome}
           nascimento={state.nascimento}
           celular={state.celular}
+          genero={state.genero}
           cpf={state.cpf}
           rg={state.rg}
-          bio={state.bio}
-          instagram={state.instagram}
           tipo={state.tipo}
           onNomeChange={(v) => update("nome", v)}
           onNascimentoChange={(v) => update("nascimento", v)}
           onCelularChange={(v) => update("celular", v)}
+          onGeneroChange={(v) => update("genero", v)}
           onCpfChange={(v) => update("cpf", v)}
           onRgChange={(v) => update("rg", v)}
+        />
+      </SignupShell>
+    );
+  }
+
+  if (state.step === 5) {
+    return (
+      <SignupShell
+        step={5}
+        totalSteps={maxStep}
+        title={<>Suas<br />especialidades</>}
+        subtitle="Selecione os serviços que você oferece às clientes."
+        onBack={handleBack}
+        onNext={handleNext}
+        canAdvance={canAdvance}
+      >
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-wrap gap-2">
+            {ESPECIALIDADE_CATEGORIES.map((cat) => {
+              const selected = state.especialidade.includes(cat.id);
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => {
+                    const next = selected
+                      ? state.especialidade.filter((id) => id !== cat.id)
+                      : [...state.especialidade, cat.id];
+                    update("especialidade", next);
+                  }}
+                  className="rounded-full px-4 py-2 text-[12px] font-semibold transition-all"
+                  style={{
+                    fontFamily: "var(--font-manrope)",
+                    background: selected ? "var(--wine-800)" : "rgba(92,3,49,0.06)",
+                    color: selected ? "var(--cream-100)" : "var(--wine-800)",
+                    border: `1.5px solid ${selected ? "var(--wine-800)" : "rgba(92,3,49,0.2)"}`,
+                  }}
+                >
+                  {cat.name}
+                </button>
+              );
+            })}
+          </div>
+          {state.especialidade.length === 0 && (
+            <p className="text-[11px]" style={{ color: "rgba(92,3,49,0.5)", fontFamily: "var(--font-manrope)" }}>
+              Selecione ao menos uma especialidade.
+            </p>
+          )}
+        </div>
+      </SignupShell>
+    );
+  }
+
+  if (state.step === 6) {
+    return (
+      <SignupShell
+        step={6}
+        totalSteps={maxStep}
+        title={<>Seus<br />documentos</>}
+        subtitle="Envie seus documentos para verificarmos seu perfil. Aceitamos foto ou PDF."
+        onBack={handleBack}
+        onNext={handleNext}
+        canAdvance={canAdvance && !submitting}
+        isFinalStep
+        nextLabel={submitting ? "Enviando..." : "Concluir cadastro"}
+      >
+        <StepDocumentos
+          bio={state.bio}
+          instagram={state.instagram}
+          especialidades={state.especialidade}
+          docIdentidade={state.docIdentidade}
+          docCertificados={state.docCertificados}
+          docAntecedentes={state.docAntecedentes}
           onBioChange={(v) => update("bio", v)}
           onInstagramChange={(v) => update("instagram", v)}
+          onDocIdentidadeChange={(file) => update("docIdentidade", file)}
+          onDocCertificadosChange={(id, file) =>
+            setState((s) => ({
+              ...s,
+              docCertificados: { ...s.docCertificados, [id]: file },
+            }))
+          }
+          onDocAntecedentesChange={(file) => update("docAntecedentes", file)}
         />
       </SignupShell>
     );
@@ -348,6 +490,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   return (
     <SignupShell
       step={4}
+      totalSteps={maxStep}
       title={
         <>
           Quase lá.
@@ -371,14 +514,12 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         endereco={state.endereco}
         numero={state.numero}
         complemento={state.complemento}
-        especialidade={state.especialidade}
         raioAtendimento={state.raioAtendimento}
         cidadeBase={state.cidadeBase}
         onCepChange={(v) => update("cep", v)}
         onEnderecoChange={(v) => update("endereco", v)}
         onNumeroChange={(v) => update("numero", v)}
         onComplementoChange={(v) => update("complemento", v)}
-        onEspecialidadeChange={(v) => update("especialidade", v)}
         onRaioAtendimentoChange={(v) => update("raioAtendimento", v)}
         onCidadeBaseChange={(v) => update("cidadeBase", v)}
         tipo={state.tipo}

@@ -13,9 +13,9 @@ const todayMonthIdx = new Date().getMonth();       // 0-indexed para barra do an
 type Period = "semana" | "mes" | "ano";
 
 const MOCK_GANHOS = {
-  semana: { bruto: 1840, taxa: 276, liquido: 1564, bars: [40, 65, 50, 80, 95, 70, 45], nextPayout: "Terça, 16 jun" },
-  mes:    { bruto: 6420, taxa: 963, liquido: 5457, bars: [60, 75, 40, 90, 55, 80, 65, 70, 45, 85, 50, 95, 30, 75, 60, 80, 55, 70, 40, 65, 90, 45, 75, 60, 85, 50, 70, 45, 80, 65], nextPayout: "Terça, 16 jun" },
-  ano:    { bruto: 38500, taxa: 5775, liquido: 32725, bars: [55, 70, 45, 80, 60, 75, 90, 50, 65, 85, 40, 70], nextPayout: "Terça, 16 jun" },
+  semana: { bruto: 1840, taxa: 276, liquido: 1564, bars: [40, 65, 50, 80, 95, 70, 45], atendimentos: [2, 4, 3, 5, 6, 4, 3], nextPayout: "Terça, 16 jun" },
+  mes:    { bruto: 6420, taxa: 963, liquido: 5457, bars: [60, 75, 40, 90, 55, 80, 65, 70, 45, 85, 50, 95, 30, 75, 60, 80, 55, 70, 40, 65, 90, 45, 75, 60, 85, 50, 70, 45, 80, 65], atendimentos: [4,5,3,6,4,5,4,5,3,6,3,7,2,5,4,5,4,5,3,4,6,3,5,4,6,3,5,3,5,4], nextPayout: "Terça, 16 jun" },
+  ano:    { bruto: 38500, taxa: 5775, liquido: 32725, bars: [55, 70, 45, 80, 60, 75, 90, 50, 65, 85, 40, 70], atendimentos: [18, 22, 15, 26, 19, 24, 28, 16, 21, 27, 13, 23], nextPayout: "Terça, 16 jun" },
 };
 
 const MOCK_TRANSACOES = [
@@ -39,8 +39,21 @@ function groupByDate(items: typeof MOCK_TRANSACOES) {
 
 const PERIOD_LABELS: Record<Period, string> = { semana: "Semana", mes: "Mês", ano: "Ano" };
 
+const WEEK_DAYS_PT = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+const MONTHS_PT = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+
+function nextLaunchDate(): string {
+  const d = new Date();
+  d.setDate(d.getDate() + 7);
+  const dia = WEEK_DAYS_PT[d.getDay()];
+  const num = d.getDate();
+  const mes = MONTHS_PT[d.getMonth()];
+  return `${dia}, ${num} ${mes}`;
+}
+
 export function ProfessionalGanhos() {
   const [period, setPeriod] = useState<Period>("semana");
+  const [selectedBar, setSelectedBar] = useState<number | null>(null);
   const data = MOCK_GANHOS[period];
   const groups = groupByDate(MOCK_TRANSACOES);
 
@@ -49,6 +62,11 @@ export function ProfessionalGanhos() {
     : period === "mes"
     ? data.bars.map((_, i) => String(i + 1))
     : ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+
+  function handlePeriodChange(p: Period) {
+    setPeriod(p);
+    setSelectedBar(null);
+  }
 
   return (
     <div className="h-full w-full flex flex-col" style={{ overflowY: "auto", scrollbarWidth: "none" }}>
@@ -72,7 +90,7 @@ export function ProfessionalGanhos() {
               <button
                 key={p}
                 type="button"
-                onClick={() => setPeriod(p)}
+                onClick={() => handlePeriodChange(p)}
                 className="flex-1 py-2.5 text-center text-[11px] font-bold uppercase tracking-wider relative"
                 style={{ fontFamily: "var(--font-manrope)", color: active ? "var(--cream-100)" : "rgba(245,239,230,0.4)" }}
               >
@@ -96,26 +114,30 @@ export function ProfessionalGanhos() {
 
         {/* Resumo */}
         <div className="rounded-[22px] bg-white/85 p-5 border" style={{ borderColor: "rgba(92,3,49,0.08)" }}>
-          <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "var(--ink-500)", fontFamily: "var(--font-manrope)" }}>A Receber</p>
-          <p style={{ fontFamily: "var(--font-manrope)", fontSize: 32, fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.05, color: "var(--success-700)", fontVariantNumeric: "tabular-nums" }}>
-            R$ {BRL(data.liquido)}
-          </p>
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "var(--ink-500)", fontFamily: "var(--font-manrope)" }}>A Receber</p>
+              <p style={{ fontFamily: "var(--font-manrope)", fontSize: 32, fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.05, color: "var(--success-700)", fontVariantNumeric: "tabular-nums" }}>
+                R$ {BRL(data.liquido)}
+              </p>
+            </div>
+            {period === "semana" && (
+              <div className="text-right">
+                <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "var(--ink-500)", fontFamily: "var(--font-manrope)" }}>Próximo Lançamento</p>
+                <p style={{ fontFamily: "var(--font-manrope)", fontSize: 14, fontWeight: 600, color: "var(--success-700)" }}>
+                  {nextLaunchDate()}
+                </p>
+              </div>
+            )}
+          </div>
 
           <div className="my-4 h-px" style={{ background: "rgba(92,3,49,0.08)" }} />
 
-          <div className="flex justify-between">
-            <div>
-              <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "var(--ink-500)", fontFamily: "var(--font-manrope)" }}>Repasse</p>
-              <p style={{ fontFamily: "var(--font-manrope)", fontSize: 18, fontWeight: 700, color: "var(--wine-800)", fontVariantNumeric: "tabular-nums" }}>
-                R$ {BRL(data.bruto)}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "var(--ink-500)", fontFamily: "var(--font-manrope)" }}>Próximo Repasse</p>
-              <p style={{ fontFamily: "var(--font-manrope)", fontSize: 14, fontWeight: 600, color: "var(--wine-900)" }}>
-                {data.nextPayout}
-              </p>
-            </div>
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "var(--ink-500)", fontFamily: "var(--font-manrope)" }}>Repasse</p>
+            <p style={{ fontFamily: "var(--font-manrope)", fontSize: 18, fontWeight: 700, color: "var(--wine-800)", fontVariantNumeric: "tabular-nums" }}>
+              R$ {BRL(data.bruto)}
+            </p>
           </div>
         </div>
 
@@ -124,23 +146,54 @@ export function ProfessionalGanhos() {
           <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "var(--ink-500)", fontFamily: "var(--font-manrope)" }}>
             {period === "semana" ? "Esta Semana" : period === "mes" ? "Este Mês" : "Este Ano"}
           </p>
-          <div className="flex h-16 items-end gap-1">
-            {data.bars.map((h, i) => (
-              <div
-                key={i}
-                className="flex-1 rounded-t-[4px]"
-                style={{
-                  height: `${h}%`,
-                  background:
-                    (period === "semana" && i === todayIdx) ||
-                    (period === "mes"    && i === todayDayOfMonth) ||
-                    (period === "ano"    && i === todayMonthIdx)
-                      ? "var(--wine-800)"
-                      : "rgba(92,3,49,0.18)",
-                  minWidth: 4,
-                }}
-              />
-            ))}
+          <div className="relative flex gap-1" style={{ height: 80 }}>
+            {data.bars.map((h, i) => {
+              const isToday =
+                (period === "semana" && i === todayIdx) ||
+                (period === "mes"    && i === todayDayOfMonth) ||
+                (period === "ano"    && i === todayMonthIdx);
+              const isSelected = selectedBar === i;
+              const barHeightPx = (h / 100) * 80;
+              return (
+                <div
+                  key={i}
+                  className="flex-1 relative cursor-pointer"
+                  style={{ minWidth: 4 }}
+                  onClick={() => setSelectedBar(isSelected ? null : i)}
+                >
+                  {isSelected && (
+                    <span
+                      className="absolute left-1/2 rounded-full px-1.5 py-0.5 whitespace-nowrap"
+                      style={{
+                        transform: "translateX(-50%)",
+                        bottom: barHeightPx + 5,
+                        background: "var(--wine-800)",
+                        color: "var(--cream-100)",
+                        fontSize: 9,
+                        fontFamily: "var(--font-manrope)",
+                        fontWeight: 700,
+                        lineHeight: 1.4,
+                        zIndex: 10,
+                      }}
+                    >
+                      {data.atendimentos[i]}
+                    </span>
+                  )}
+                  <div
+                    className="absolute bottom-0 left-0 right-0 rounded-t-[4px]"
+                    style={{
+                      height: `${h}%`,
+                      background: isSelected
+                        ? "#9b2254"
+                        : isToday
+                        ? "var(--wine-800)"
+                        : "rgba(92,3,49,0.18)",
+                      transition: "background 0.15s",
+                    }}
+                  />
+                </div>
+              );
+            })}
           </div>
           <div className="mt-1.5 flex gap-1">
             {barDays.map((d, i) => (
@@ -176,16 +229,16 @@ export function ProfessionalGanhos() {
           <p className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}>Composição</p>
 
           <div className="flex justify-between items-center">
-            <span className="text-[12px]" style={{ color: "var(--ink-500)", fontFamily: "var(--font-manrope)" }}>Bruto dos clientes</span>
+            <span className="text-[12px]" style={{ color: "var(--ink-500)", fontFamily: "var(--font-manrope)" }}>Valor Bruto</span>
             <span className="text-[13px] font-semibold" style={{ color: "var(--wine-900)", fontFamily: "var(--font-manrope)" }}>R$ {BRL(data.bruto)}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-[12px]" style={{ color: "rgba(180,50,50,0.75)", fontFamily: "var(--font-manrope)" }}>Taxa da plataforma (15%)</span>
+            <span className="text-[12px]" style={{ color: "rgba(180,50,50,0.75)", fontFamily: "var(--font-manrope)" }}>Taxas</span>
             <span className="text-[13px] font-semibold" style={{ color: "rgba(180,50,50,0.75)", fontFamily: "var(--font-manrope)" }}>− R$ {BRL(data.taxa)}</span>
           </div>
           <div className="h-px" style={{ background: "rgba(92,3,49,0.08)" }} />
           <div className="flex justify-between items-center">
-            <span className="text-[12px] font-bold" style={{ color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}>Líquido (você recebe)</span>
+            <span className="text-[12px] font-bold" style={{ color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}>Valor Líquido</span>
             <span className="text-[14px] font-bold" style={{ color: "var(--success-700)", fontFamily: "var(--font-manrope)" }}>R$ {BRL(data.liquido)}</span>
           </div>
         </div>
@@ -215,19 +268,9 @@ export function ProfessionalGanhos() {
                           {t.service}
                         </p>
                       </div>
-                      <div className="flex flex-col items-end gap-1 shrink-0">
+                      <div className="flex flex-col items-end shrink-0">
                         <span className="text-[13px] font-bold" style={{ color: "var(--success-700)", fontFamily: "var(--font-manrope)" }}>
                           R$ {BRL(t.liquido)}
-                        </span>
-                        <span
-                          className="rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider"
-                          style={{
-                            background: t.status === "paid" ? "rgba(78,122,74,0.12)" : "rgba(201,160,32,0.12)",
-                            color: t.status === "paid" ? "#4E7A4A" : "#C9A020",
-                            fontFamily: "var(--font-manrope)",
-                          }}
-                        >
-                          {t.status === "paid" ? "Pago" : "Pendente"}
                         </span>
                       </div>
                     </div>

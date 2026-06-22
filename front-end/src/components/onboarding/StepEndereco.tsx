@@ -10,14 +10,12 @@ type StepEnderecoProps = {
   endereco: string;
   numero: string;
   complemento: string;
-  especialidade: string[];
   raioAtendimento: string;
   cidadeBase: string;
   onCepChange: (value: string) => void;
   onEnderecoChange: (value: string) => void;
   onNumeroChange: (value: string) => void;
   onComplementoChange: (value: string) => void;
-  onEspecialidadeChange: (value: string[]) => void;
   onRaioAtendimentoChange: (value: string) => void;
   onCidadeBaseChange: (value: string) => void;
   tipo?: AccountType;
@@ -32,7 +30,7 @@ type ViaCepResponse = {
   erro?: boolean | string;
 };
 
-const CATEGORIES = [
+export const ESPECIALIDADE_CATEGORIES = [
   { id: "manicure_pedicure", name: "Manicure / Pedicure" },
   { id: "cabelo", name: "Cabelo" },
   { id: "maquiagem", name: "Maquiagem" },
@@ -78,14 +76,12 @@ export function StepEndereco({
   endereco,
   numero,
   complemento,
-  especialidade,
   raioAtendimento,
   cidadeBase,
   onCepChange,
   onEnderecoChange,
   onNumeroChange,
   onComplementoChange,
-  onEspecialidadeChange,
   onRaioAtendimentoChange,
   onCidadeBaseChange,
   tipo,
@@ -235,49 +231,6 @@ export function StepEndereco({
             </div>
           </div>
 
-          {/* Multi-select de especialidades */}
-          <div className="flex flex-col gap-2">
-            <span
-              className="text-[11px] font-semibold uppercase tracking-wider"
-              style={{ color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}
-            >
-              Especialidades *
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {CATEGORIES.map((cat) => {
-                const selected = especialidade.includes(cat.id);
-                return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => {
-                      const next = selected
-                        ? especialidade.filter((id) => id !== cat.id)
-                        : [...especialidade, cat.id];
-                      onEspecialidadeChange(next);
-                    }}
-                    className="rounded-full px-4 py-2 text-[12px] font-semibold transition-all"
-                    style={{
-                      fontFamily: "var(--font-manrope)",
-                      background: selected ? "var(--wine-800)" : "rgba(92,3,49,0.06)",
-                      color: selected ? "var(--cream-100)" : "var(--wine-800)",
-                      border: `1.5px solid ${selected ? "var(--wine-800)" : "rgba(92,3,49,0.2)"}`,
-                    }}
-                  >
-                    {cat.name}
-                  </button>
-                );
-              })}
-            </div>
-            {!isValidEspecialidade(especialidade) && (
-              <p
-                className="text-[11px]"
-                style={{ color: "rgba(92,3,49,0.5)", fontFamily: "var(--font-manrope)" }}
-              >
-                Selecione ao menos uma especialidade.
-              </p>
-            )}
-          </div>
         </>
       )}
 

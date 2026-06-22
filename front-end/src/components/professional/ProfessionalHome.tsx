@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useUser, useClerk } from "@clerk/nextjs";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { ServiceInProgress } from "./ServiceInProgress";
 import {
   IconHome,
   IconCalendar,
@@ -51,7 +52,8 @@ const MOCK = {
     name: "Camila Machado",
     initial: "C",
     serviceName: "Manicure em gel",
-    price: "R$ 85",
+    price: "R$ 85",           // valor cobrado da cliente
+    netPrice: "R$ 72,25",    // repasse para a profissional após taxa de 15% da plataforma
     duration: "1h30",
     time: "14:30",
     neighborhood: "Jardins",
@@ -91,6 +93,8 @@ export function ProfessionalHome() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>("home");
   const [showAppointmentDetail, setShowAppointmentDetail] = useState(false);
+  const [arrivalNotified, setArrivalNotified] = useState(false);
+  const [serviceInProgress, setServiceInProgress] = useState(false);
 
   const greeting = greetingForHour(new Date().getHours());
   // getDay(): 0=Dom, 1=Seg, ..., 6=Sáb — coincide com a nova ordem do array
@@ -449,7 +453,7 @@ export function ProfessionalHome() {
                   fontFamily: "var(--font-manrope)",
                 }}
               >
-                {MOCK.nextAppointment.serviceName} · {MOCK.nextAppointment.price} · {MOCK.nextAppointment.duration}
+                {MOCK.nextAppointment.serviceName} · {MOCK.nextAppointment.netPrice} · {MOCK.nextAppointment.duration}
               </p>
               <p
                 className="text-[12px]"
@@ -517,7 +521,8 @@ export function ProfessionalHome() {
                   fontFamily: "var(--font-manrope)",
                 }}
               >
-                <IconStar size={12} />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logos/popyns-glifo-creme.png" alt="" aria-hidden="true" width={14} height={14} style={{ objectFit: "contain" }} />
                 {MOCK.seals.current}/{MOCK.seals.total}
               </div>
             </div>
@@ -764,9 +769,8 @@ export function ProfessionalHome() {
               <div className="rounded-[22px] p-5 bg-white/70 border flex flex-col gap-3" style={{ borderColor: "rgba(92,3,49,0.08)" }}>
                 <p className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}>Serviço</p>
                 <DetailRow label="Serviço" value={MOCK.nextAppointment.serviceName} />
-                <DetailRow label="Duração" value={MOCK.nextAppointment.duration} />
-                <DetailRow label="Valor" value={MOCK.nextAppointment.price} highlight />
-                <DetailRow label="Pagamento" value={MOCK.nextAppointment.paymentMethod} />
+                <DetailRow label="Duração média" value={`~${MOCK.nextAppointment.duration}`} />
+                <DetailRow label="Valor" value={MOCK.nextAppointment.netPrice} highlight />
               </div>
 
               {/* Local e horário */}
@@ -779,25 +783,111 @@ export function ProfessionalHome() {
               </div>
 
               {/* Ações */}
-              <button
-                type="button"
-                className="h-12 w-full rounded-[16px] text-[13px] font-bold uppercase tracking-wider transition-colors"
-                style={{ background: "var(--wine-800)", color: "var(--cream-100)", fontFamily: "var(--font-manrope)" }}
-              >
-                Confirmar Chegada
-              </button>
-              <button
-                type="button"
-                className="h-12 w-full rounded-[16px] border text-[13px] font-bold uppercase tracking-wider transition-colors"
+              {arrivalNotified ? (
+                <div
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-[16px] border text-[13px] font-bold uppercase tracking-wider"
+                  style={{ borderColor: "rgba(92,3,49,0.2)", color: "rgba(92,3,49,0.45)", fontFamily: "var(--font-manrope)", background: "rgba(92,3,49,0.04)" }}
+                >
+                  <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 6L9 17l-5-5" />
+                  </svg>
+                  Cliente notificada
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    // TODO: chamar endpoint de push notification para a cliente
+                    setArrivalNotified(true);
+                  }}
+                  className="h-12 w-full rounded-[16px] text-[13px] font-bold uppercase tracking-wider transition-all active:scale-[0.98]"
+                  style={{ background: "var(--wine-800)", color: "var(--cream-100)", fontFamily: "var(--font-manrope)" }}
+                >
+                  Notificar chegada
+                </button>
+              )}
+              <a
+                href={`tel:${MOCK.nextAppointment.phone.replace(/\D/g, "")}`}
+                className="flex h-12 w-full items-center justify-center rounded-[16px] border text-[13px] font-bold uppercase tracking-wider transition-colors"
                 style={{ borderColor: "rgba(92,3,49,0.2)", color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}
               >
                 Entrar em Contato
-              </button>
+              </a>
+              <SlideToStart
+                onConfirm={() => { setShowAppointmentDetail(false); setServiceInProgress(true); }}
+              />
 
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+      <AnimatePresence>
+        {serviceInProgress && (
+          <ServiceInProgress
+            serviceName={MOCK.nextAppointment.serviceName}
+            clientName={MOCK.nextAppointment.name}
+            durationLabel={MOCK.nextAppointment.duration}
+            netPrice={MOCK.nextAppointment.netPrice}
+            onFinished={() => { setServiceInProgress(false); setArrivalNotified(false); }}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function SlideToStart({ onConfirm }: { onConfirm: () => void }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [fillPct, setFillPct] = useState(0);
+  const controls = useAnimation();
+
+  function handleDrag(_: unknown, info: { offset: { x: number } }) {
+    if (!trackRef.current) return;
+    const maxX = trackRef.current.offsetWidth - 64;
+    setFillPct(Math.min(100, Math.max(0, (info.offset.x / maxX) * 100)));
+  }
+
+  function handleDragEnd(_: unknown, info: { offset: { x: number } }) {
+    if (!trackRef.current) return;
+    const maxX = trackRef.current.offsetWidth - 64;
+    if (info.offset.x >= maxX * 0.82) {
+      onConfirm();
+    } else {
+      controls.start({ x: 0, transition: { type: "spring", stiffness: 500, damping: 35 } });
+      setFillPct(0);
+    }
+  }
+
+  return (
+    <div
+      ref={trackRef}
+      className="relative h-[60px] w-full overflow-hidden rounded-2xl select-none"
+      style={{ background: "var(--wine-800)" }}
+    >
+      <div
+        className="absolute inset-y-0 left-0"
+        style={{ width: `${fillPct}%`, background: "rgba(255,255,255,0.1)", transition: "width 16ms linear" }}
+      />
+      <span
+        className="pointer-events-none absolute inset-0 flex items-center justify-center pl-16 text-[12px] font-bold uppercase tracking-[0.12em]"
+        style={{ color: `rgba(255,255,255,${Math.max(0.1, 0.45 - (fillPct / 100) * 0.38)})`, fontFamily: "var(--font-manrope)" }}
+      >
+        Iniciar atendimento
+      </span>
+      <motion.div
+        drag="x"
+        dragConstraints={trackRef}
+        dragElastic={0}
+        dragMomentum={false}
+        animate={controls}
+        onDrag={handleDrag}
+        onDragEnd={handleDragEnd}
+        whileDrag={{ scale: 1.07 }}
+        className="absolute top-[6px] left-[6px] z-10 flex h-[48px] w-[48px] cursor-grab items-center justify-center rounded-full active:cursor-grabbing"
+        style={{ background: "white", color: "var(--wine-800)", boxShadow: "0 4px 16px rgba(92,3,49,0.35)", touchAction: "none" }}
+      >
+        <IconArrowRight size={20} />
+      </motion.div>
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import { useUser, useClerk, useAuth } from "@clerk/nextjs";
 import { useSupabase, SUPABASE_BUCKET, avatarPath } from "@/lib/supabase";
-import { IconCamera, IconPhone, IconUser, IconCalendar, IconPin, IconMail, IconArrowRight } from "../onboarding/icons";
+import { IconCamera, IconPhone, IconUser, IconCalendar, IconPin, IconMail, IconArrowRight, IconHome } from "../onboarding/icons";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Helper function to format phone numbers
@@ -204,7 +204,7 @@ const MOCK_BOOKINGS: Booking[] = [
   },
 ];
 
-type ActiveTab = "perfil" | "enderecos" | "favoritos" | "agendamentos";
+type ActiveTab = "mapa" | "perfil" | "enderecos" | "favoritos" | "agendamentos";
 
 export function ClientProfile() {
   const { user, isLoaded } = useUser();
@@ -841,6 +841,48 @@ export function ClientProfile() {
     }
   };
 
+  // Confirm booking (pending → accepted)
+  const handleConfirmBooking = async (bookingId: string) => {
+    try {
+      const { error } = await supabase
+        .from("bookings")
+        .update({ status: "accepted", accepted_at: new Date().toISOString() })
+        .eq("id", bookingId);
+      if (error) throw error;
+      showToast("Atendimento confirmado!", "add");
+      refreshData();
+    } catch (err) {
+      console.error("Error confirming booking:", err);
+      showToast("Erro ao confirmar atendimento.", "error");
+    }
+  };
+
+  // Cancel booking (pending/accepted → cancelled)
+  const handleCancelBooking = (bookingId: string) => {
+    triggerConfirm(
+      "Cancelar Atendimento",
+      "Tem certeza que deseja cancelar este atendimento?",
+      async () => {
+        try {
+          const { error } = await supabase
+            .from("bookings")
+            .update({
+              status: "cancelled",
+              cancelled_at: new Date().toISOString(),
+              cancelled_by: dbUserId,
+            })
+            .eq("id", bookingId);
+          if (error) throw error;
+          showToast("Atendimento cancelado.", "delete");
+          refreshData();
+        } catch (err) {
+          console.error("Error cancelling booking:", err);
+          showToast("Erro ao cancelar atendimento.", "error");
+        }
+      }
+    );
+  };
+
   // Toggle Favorite
   const handleToggleFavoriteReal = async (professionalProfileId: string, currentFavId?: string) => {
     if (!dbUserId) return;
@@ -887,20 +929,27 @@ export function ClientProfile() {
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case "pending": return { label: "Aguardando", color: "text-amber-700 bg-amber-100 border-amber-200" };
-      case "accepted": return { label: "Confirmado", color: "text-sky-700 bg-sky-100 border-sky-200" };
-      case "on_the_way": return { label: "A Caminho", color: "text-indigo-700 bg-indigo-100 border-indigo-200" };
-      case "arrived": return { label: "Chegou", color: "text-violet-700 bg-violet-100 border-violet-200" };
+      case "pending":
+        return { label: "Aguardando", color: "text-amber-700 bg-amber-100 border-amber-200" };
+      case "accepted":
+      case "on_the_way":
+      case "arrived":
       case "started":
-      case "in_progress": return { label: "Em Atendimento", color: "text-pink-700 bg-pink-100 border-pink-200" };
-      case "completed": return { label: "Concluído", color: "text-emerald-700 bg-emerald-100 border-emerald-200" };
-      case "cancelled": return { label: "Cancelado", color: "text-rose-700 bg-rose-100 border-rose-200" };
-      default: return { label: status, color: "text-[var(--ink-500)] bg-black/5 border-[rgba(92,3,49,0.1)]" };
+      case "in_progress":
+        return { label: "Confirmado", color: "text-pink-700 bg-pink-100 border-pink-200" };
+      case "completed":
+        return { label: "Concluído", color: "text-emerald-700 bg-emerald-100 border-emerald-200" };
+      case "cancelled":
+      case "rejected":
+      case "expired":
+        return { label: "Cancelado", color: "text-red-700 bg-red-100 border-red-200" };
+      default:
+        return { label: status, color: "text-[var(--ink-500)] bg-black/5 border-[rgba(92,3,49,0.1)]" };
     }
   };
 
   return (
-    <div className="flex h-full w-full flex-col overflow-y-auto no-scrollbar relative select-none">
+    <div className="absolute inset-0 flex flex-col overflow-hidden select-none">
       <style dangerouslySetInnerHTML={{ __html: `
         .no-scrollbar::-webkit-scrollbar {
           display: none !important;
@@ -912,70 +961,55 @@ export function ClientProfile() {
       ` }} />
 
       {/* Profile Header */}
-      <header className="mb-6 text-center shrink-0 px-5 pt-6">
-        <h1
-          style={{
-            fontFamily: "var(--font-cormorant)",
-            fontStyle: "italic",
-            fontWeight: 500,
-            fontSize: "32px",
-            lineHeight: 1.1,
-            color: "var(--cream-100)",
-          }}
-        >
-          Meu Perfil
-        </h1>
-        <p
-          className="mt-1.5 text-[10px] uppercase tracking-[0.16em]"
-          style={{
-            fontFamily: "var(--font-manrope)",
-            color: "rgba(245, 239, 230, 0.5)",
-          }}
-        >
-          Área da Cliente
-        </p>
-      </header>
-
-      {/* Tabs Menu */}
-      <div className="flex border-b border-white/5 sticky top-0 bg-[#5C0331] z-10 py-1 px-5 flex-shrink-0">
-        {(["perfil", "enderecos", "favoritos", "agendamentos"] as ActiveTab[]).map((tab) => {
-          const active = activeTab === tab;
-          const labels: Record<ActiveTab, string> = {
-            perfil: "Perfil",
-            enderecos: "Endereços",
-            favoritos: "Favoritos",
-            agendamentos: "Agenda",
-          };
-          return (
-            <button
-              key={tab}
-              onClick={() => {
-                setActiveTab(tab);
-                setShowAddressForm(false);
-                setEditingAddress(null);
-              }}
-              className="flex-1 py-2 text-center text-[11px] font-bold uppercase tracking-wider relative transition-colors duration-200"
-              style={{
-                fontFamily: "var(--font-manrope)",
-                color: active ? "var(--cream-100)" : "rgba(245, 239, 230, 0.4)",
-              }}
-            >
-              {labels[tab]}
-              {active && (
-                <motion.div
-                  layoutId="activeTabUnderline"
-                  className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[var(--rose-200)]"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-            </button>
-          );
-        })}
-      </div>
+      {(() => {
+        const headerMap: Record<ActiveTab, { title: string; subtitle: string }> = {
+          mapa:         { title: "Explorar",    subtitle: "Perto de Você"          },
+          perfil:       { title: "Meu Perfil",  subtitle: "Área da Cliente"        },
+          enderecos:    { title: "Endereços",   subtitle: "Meus Locais"            },
+          favoritos:    { title: "Favoritas",   subtitle: "Profissionais Salvas"   },
+          agendamentos: { title: "Agenda",      subtitle: "Histórico de Serviços"  },
+        };
+        const { title, subtitle } = headerMap[activeTab];
+        return (
+          <header className="text-center shrink-0 px-5 pt-6 pb-4" style={{ background: "var(--wine-800)" }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.18 }}
+              >
+                <h1
+                  style={{
+                    fontFamily: "var(--font-cormorant)",
+                    fontStyle: "italic",
+                    fontWeight: 500,
+                    fontSize: "32px",
+                    lineHeight: 1.1,
+                    color: "var(--cream-100)",
+                  }}
+                >
+                  {title}
+                </h1>
+                <p
+                  className="mt-1.5 text-[10px] uppercase tracking-[0.16em]"
+                  style={{
+                    fontFamily: "var(--font-manrope)",
+                    color: "rgba(245, 239, 230, 0.5)",
+                  }}
+                >
+                  {subtitle}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+          </header>
+        );
+      })()}
 
       {/* Content views with transitions — nude background */}
-      <div className="bg-warm-gradient flex-1 flex flex-col w-full px-5 pt-6 pb-6">
-        <div className="flex flex-col w-full max-w-[390px] mx-auto pb-6 flex-1">
+      <div className="bg-warm-gradient flex-1 overflow-y-auto no-scrollbar w-full px-5 pt-6" style={{ paddingBottom: "100px" }}>
+        <div className="flex flex-col w-full max-w-[390px] mx-auto flex-1">
         <AnimatePresence mode="wait">
           {activeTab === "perfil" && (
             <motion.div
@@ -1552,6 +1586,30 @@ export function ClientProfile() {
                           </span>
                         </div>
                       )}
+
+                      {/* Ações da cliente */}
+                      {(bk.status === "pending" || bk.status === "accepted") && (
+                        <div className="flex gap-2 mt-2 pt-2 border-t border-[rgba(92,3,49,0.06)]">
+                          {bk.status === "pending" && (
+                            <button
+                              type="button"
+                              onClick={() => handleConfirmBooking(bk.id)}
+                              className="flex-1 h-9 rounded-xl text-[11px] font-bold uppercase tracking-wider active:scale-[0.98] transition-all"
+                              style={{ background: "var(--wine-800)", color: "var(--cream-100)", fontFamily: "var(--font-manrope)" }}
+                            >
+                              Confirmar
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => handleCancelBooking(bk.id)}
+                            className={`${bk.status === "pending" ? "flex-1" : "w-full"} h-9 rounded-xl border text-[11px] font-bold uppercase tracking-wider hover:bg-[rgba(92,3,49,0.04)] active:scale-[0.98] transition-all`}
+                            style={{ borderColor: "rgba(92,3,49,0.2)", color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
@@ -1611,6 +1669,51 @@ export function ClientProfile() {
             </motion.div>
           )}
         </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Tab bar flutuante */}
+      <div className="absolute bottom-7 left-1/2 z-40 -translate-x-1/2">
+        <div
+          className="flex items-center gap-1 rounded-full p-2 shadow-[0_18px_36px_-18px_rgba(31,16,20,0.45)]"
+          style={{ background: "var(--wine-900)" }}
+        >
+          {([
+            { key: "mapa" as ActiveTab,         label: "Mapa"       },
+            { key: "enderecos" as ActiveTab,     label: "Endereços"  },
+            { key: "favoritos" as ActiveTab,     label: "Favoritos"  },
+            { key: "agendamentos" as ActiveTab,  label: "Agenda"     },
+            { key: "perfil" as ActiveTab,        label: "Perfil"     },
+          ]).map(({ key, label }) => {
+            const active = activeTab === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => {
+                  setActiveTab(key);
+                  setShowAddressForm(false);
+                  setEditingAddress(null);
+                }}
+                className="flex h-10 items-center justify-center rounded-full transition-all"
+                style={{
+                  width: active ? 52 : 40,
+                  background: active
+                    ? "linear-gradient(135deg, #D9A89E 0%, #C28A7E 100%)"
+                    : "transparent",
+                  color: active ? "var(--wine-900)" : "rgba(245,239,230,0.7)",
+                }}
+                aria-label={label}
+                aria-pressed={active}
+              >
+                {key === "mapa" && <IconPin size={18} />}
+                {key === "perfil" && <IconUser size={18} />}
+                {key === "enderecos" && <IconHome size={18} />}
+                {key === "favoritos" && <IconHeart size={18} />}
+                {key === "agendamentos" && <IconCalendar size={18} />}
+              </button>
+            );
+          })}
         </div>
       </div>
 
