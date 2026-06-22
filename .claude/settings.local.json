@@ -1,7 +1,41 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -vE \"\\\\.map$\")"
+      "Bash(grep -vE \"\\\\.map$\")",
+      "Bash(git submodule *)",
+      "Bash(git ls-tree *)",
+      "Bash(Test-Path .gitmodules)",
+      "Bash(git fetch *)",
+      "Skill(run)",
+      "Bash(cloudflared --version)",
+      "PowerShell(cloudflared *)",
+      "PowerShell(winget install *)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(npm run *)",
+      "PowerShell(Set-Service *)",
+      "PowerShell(net start *)",
+      "PowerShell(Stop-Process *)",
+      "Bash(npm run *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(npm install *)",
+      "PowerShell(Start-Process powershell -ArgumentList '-NoExit', '-Command', 'Set-Location \"C:\\\\Users\\\\felip\\\\OneDrive\\\\Documentos\\\\Popyns App\\\\back-end\"; npm run dev')",
+      "PowerShell(Start-Process powershell -ArgumentList '-NoExit', '-Command', 'Set-Location \"C:\\\\Users\\\\felip\\\\OneDrive\\\\Documentos\\\\Popyns App\\\\front-end\"; npm run dev')",
+      "Bash(nohup npm run dev)",
+      "Bash(echo \"PID=$!\")",
+      "Read(//tmp/**)",
+      "PowerShell(Start-Process powershell -ArgumentList '-NoExit', '-Command', 'cd \"C:\\\\Users\\\\felip\\\\OneDrive\\\\Documentos\\\\Popyns App\\\\back-end\"; npm run dev')",
+      "PowerShell(Start-Process powershell -ArgumentList '-NoExit', '-Command', 'cd \"C:\\\\Users\\\\felip\\\\OneDrive\\\\Documentos\\\\Popyns App\\\\front-end\"; npm run dev')",
+      "Bash(echo \"Back-end PID: $!\")",
+      "Bash(echo \"Front-end PID: $!\")",
+      "Bash(npx tsc *)",
+      "PowerShell(Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"Set-Location 'C:\\\\Users\\\\felip\\\\OneDrive\\\\Documentos\\\\Popyns App\\\\back-end'; npm run dev\" -WindowStyle Normal)",
+      "PowerShell(Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"Set-Location 'C:\\\\Users\\\\felip\\\\OneDrive\\\\Documentos\\\\Popyns App\\\\front-end'; npm run dev\" -WindowStyle Normal)",
+      "Bash(git remote *)",
+      "Bash(git pull *)",
+      "Bash(git merge *)",
+      "Bash(git ls-remote *)"
     ]
   }
 }
