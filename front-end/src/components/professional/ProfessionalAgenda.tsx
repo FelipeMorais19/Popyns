@@ -62,24 +62,41 @@ const STATUS_STYLE: Record<AppointmentStatus, { dot: string; divider: string; bg
   cancelled: { dot: "#E05252", divider: "rgba(224,82,82,0.35)",  bg: "rgba(224,82,82,0.12)",  text: "#C53030", label: "Cancelado"  },
 };
 
-// Mock fallback — usado quando a profissional não tem bookings reais ainda
-// 4 dias com pelo menos 1 de cada status para visualização
 const MOCK_APPOINTMENTS: AgendaAppointment[] = [
-  // 12/jun — concluídos (passados) + 1 cancelado
-  { id: "1",  date: "2026-06-12", time: "09:00", clientName: "Camila Machado",  service: "Manicure em gel",    status: "completed", price: "R$ 85",  duration: "1h30" },
-  { id: "2",  date: "2026-06-12", time: "11:30", clientName: "Ana Lima",        service: "Pedicure completa",  status: "completed", price: "R$ 55",  duration: "1h"   },
-  { id: "3",  date: "2026-06-12", time: "14:00", clientName: "Larissa Rocha",   service: "Manicure simples",   status: "cancelled", price: "R$ 45",  duration: "45min"},
-  // 16/jun (hoje) — confirmado + pendente
-  { id: "4",  date: "2026-06-16", time: "09:30", clientName: "Fernanda Alves",  service: "Pedicure completa",  status: "confirmed", price: "R$ 55",  duration: "1h"   },
-  { id: "5",  date: "2026-06-16", time: "11:00", clientName: "Beatriz Costa",   service: "Manicure em gel",    status: "pending",   price: "R$ 85",  duration: "1h30" },
-  // 19/jun — confirmado + pendente
-  { id: "6",  date: "2026-06-19", time: "10:00", clientName: "Júlia Ferreira",  service: "Manicure em gel",    status: "confirmed", price: "R$ 85",  duration: "1h30" },
-  { id: "7",  date: "2026-06-19", time: "14:30", clientName: "Mariana Souza",   service: "Pé e mão completo",  status: "pending",   price: "R$ 120", duration: "2h"   },
-  // 22/jun — todos os 4 status no mesmo dia
-  { id: "8",  date: "2026-06-22", time: "09:00", clientName: "Sofia Lima",      service: "Manicure em gel",    status: "confirmed", price: "R$ 85",  duration: "1h30" },
-  { id: "9",  date: "2026-06-22", time: "10:30", clientName: "Camila Rocha",    service: "Pedicure completa",  status: "pending",   price: "R$ 55",  duration: "1h"   },
-  { id: "10", date: "2026-06-22", time: "13:00", clientName: "Helena Dias",     service: "Manicure simples",   status: "completed", price: "R$ 45",  duration: "45min"},
-  { id: "11", date: "2026-06-22", time: "15:00", clientName: "Paula Menezes",   service: "Pé e mão completo",  status: "cancelled", price: "R$ 120", duration: "2h"   },
+  // Mar/2026 — concluídos
+  { id: "h10", date: "2026-03-05", time: "11:30", clientName: "Aline Fonseca",   service: "Pedicure simples",       status: "completed", price: "R$ 45",  duration: "45min" },
+  { id: "h11", date: "2026-03-18", time: "09:00", clientName: "Juliana Barros",  service: "Pedicure completa",      status: "completed", price: "R$ 75",  duration: "1h30"  },
+  // Abr/2026 — concluídos
+  { id: "h8",  date: "2026-04-10", time: "15:00", clientName: "Renata Oliveira", service: "Pedicure completa",      status: "completed", price: "R$ 75",  duration: "1h30"  },
+  { id: "h9",  date: "2026-04-22", time: "10:00", clientName: "Paula Menezes",   service: "Pedicure em gel",        status: "completed", price: "R$ 85",  duration: "1h30"  },
+  // Mai/2026 — concluídos
+  { id: "h5",  date: "2026-05-15", time: "14:30", clientName: "Helena Dias",     service: "Pedicure completa",      status: "completed", price: "R$ 75",  duration: "1h30"  },
+  { id: "h6",  date: "2026-05-20", time: "09:30", clientName: "Beatriz Lima",    service: "Spa dos Pés",            status: "completed", price: "R$ 90",  duration: "1h"    },
+  { id: "h7",  date: "2026-05-28", time: "11:00", clientName: "Fernanda Costa",  service: "Pedicure em gel",        status: "completed", price: "R$ 85",  duration: "1h30"  },
+  // Jun/2026 — concluídos passados
+  { id: "1",   date: "2026-06-12", time: "09:00", clientName: "Camila Machado",  service: "Pedicure em gel",        status: "completed", price: "R$ 85",  duration: "1h30"  },
+  { id: "2",   date: "2026-06-12", time: "11:30", clientName: "Ana Lima",        service: "Pedicure completa",      status: "completed", price: "R$ 75",  duration: "1h30"  },
+  { id: "3",   date: "2026-06-12", time: "14:00", clientName: "Larissa Rocha",   service: "Pedicure simples",       status: "cancelled", price: "R$ 45",  duration: "45min" },
+  { id: "h4",  date: "2026-06-12", time: "16:00", clientName: "Sofia Alves",     service: "Pedicure simples",       status: "completed", price: "R$ 45",  duration: "45min" },
+  { id: "h3",  date: "2026-06-15", time: "10:30", clientName: "Larissa Rocha",   service: "Pedicure em gel",        status: "completed", price: "R$ 85",  duration: "1h30"  },
+  { id: "4",   date: "2026-06-16", time: "09:30", clientName: "Fernanda Alves",  service: "Pedicure completa",      status: "confirmed", price: "R$ 75",  duration: "1h30"  },
+  { id: "5",   date: "2026-06-16", time: "11:00", clientName: "Beatriz Costa",   service: "Pedicure em gel",        status: "pending",   price: "R$ 85",  duration: "1h30"  },
+  { id: "h2",  date: "2026-06-18", time: "14:00", clientName: "Ana Lima",        service: "Pedicure completa",      status: "completed", price: "R$ 75",  duration: "1h30"  },
+  { id: "6",   date: "2026-06-19", time: "10:00", clientName: "Júlia Ferreira",  service: "Pedicure em gel",        status: "confirmed", price: "R$ 85",  duration: "1h30"  },
+  { id: "7",   date: "2026-06-19", time: "14:30", clientName: "Mariana Souza",   service: "Spa dos Pés",            status: "pending",   price: "R$ 90",  duration: "1h"    },
+  { id: "h1",  date: "2026-06-20", time: "09:00", clientName: "Camila Machado",  service: "Hidratação Profunda",    status: "completed", price: "R$ 60",  duration: "45min" },
+  // 22/jun — todos os 4 status
+  { id: "8",   date: "2026-06-22", time: "09:00", clientName: "Sofia Lima",      service: "Pedicure em gel",        status: "confirmed", price: "R$ 85",  duration: "1h30"  },
+  { id: "12",  date: "2026-06-22", time: "10:30", clientName: "Renata Oliveira", service: "Pedicure completa",      status: "confirmed", price: "R$ 75",  duration: "1h30"  },
+  { id: "13",  date: "2026-06-22", time: "14:00", clientName: "Débora Moura",    service: "Pedicure simples",       status: "confirmed", price: "R$ 45",  duration: "45min" },
+  { id: "9",   date: "2026-06-22", time: "08:30", clientName: "Camila Rocha",    service: "Pedicure completa",      status: "pending",   price: "R$ 75",  duration: "1h30"  },
+  { id: "14",  date: "2026-06-22", time: "12:00", clientName: "Tatiane Cruz",    service: "Pedicure em gel",        status: "pending",   price: "R$ 85",  duration: "1h30"  },
+  { id: "10",  date: "2026-06-22", time: "07:30", clientName: "Helena Dias",     service: "Pedicure simples",       status: "completed", price: "R$ 45",  duration: "45min" },
+  { id: "15",  date: "2026-06-22", time: "11:00", clientName: "Aline Fonseca",   service: "Pedicure completa",      status: "completed", price: "R$ 75",  duration: "1h30"  },
+  { id: "11",  date: "2026-06-22", time: "15:00", clientName: "Paula Menezes",   service: "Spa dos Pés",            status: "cancelled", price: "R$ 90",  duration: "1h"    },
+  { id: "16",  date: "2026-06-22", time: "16:30", clientName: "Juliana Barros",  service: "Pedicure em gel",        status: "cancelled", price: "R$ 85",  duration: "1h30"  },
+  // 23/jun (hoje)
+  { id: "h0",  date: "2026-06-23", time: "08:30", clientName: "Tatiane Cruz",    service: "Pedicure em gel",        status: "completed", price: "R$ 85",  duration: "1h30"  },
 ];
 
 type RawBooking = {
@@ -245,7 +262,7 @@ export function ProfessionalAgenda() {
   }
 
   return (
-    <div className="h-full w-full flex flex-col" style={{ overflowY: "auto", scrollbarWidth: "none" }}>
+    <div className="h-full w-full flex flex-col overflow-hidden">
 
       {/* Calendário */}
       <div className="shrink-0 px-5 pt-6 pb-4" style={{ background: "var(--wine-800)" }}>
@@ -341,7 +358,7 @@ export function ProfessionalAgenda() {
       </div>
 
       {/* Lista de atendimentos */}
-      <div className="bg-warm-gradient flex-1 px-5 pt-5 pb-10">
+      <div className="bg-warm-gradient flex-1 px-5 pt-5 pb-10" style={{ overflowY: "auto", scrollbarWidth: "none" }}>
 
         {/* Cabeçalho do dia */}
         <div className="flex items-center justify-between mb-4">
@@ -377,66 +394,84 @@ export function ProfessionalAgenda() {
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            {dayAppts.map((appt) => (
-              <div
-                key={appt.id}
-                className="flex items-center gap-4 rounded-[18px] p-4 text-left w-full border bg-white/70"
-                style={{ borderColor: "rgba(92,3,49,0.08)" }}
-              >
-                {/* Hora + indicador de status */}
-                <div className="flex flex-col items-center gap-1 shrink-0">
-                  <span
-                    className="text-[13px] font-bold"
-                    style={{ color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}
+            {(() => {
+              const STATUS_ORDER: AppointmentStatus[] = ["confirmed", "pending", "completed", "cancelled"];
+              const groups = STATUS_ORDER
+                .map((status) => dayAppts.filter((a) => a.status === status))
+                .filter((g) => g.length > 0);
+
+              return groups.flatMap((group, gi) => [
+                ...(gi > 0
+                  ? [
+                      <div key={`sep-${gi}`} className="flex items-center gap-2 py-1">
+                        <div className="flex-1 border-t border-dashed" style={{ borderColor: "rgba(92,3,49,0.18)" }} />
+                        <div className="h-1.5 w-1.5 rounded-full shrink-0" style={{ background: "rgba(92,3,49,0.22)" }} />
+                        <div className="flex-1 border-t border-dashed" style={{ borderColor: "rgba(92,3,49,0.18)" }} />
+                      </div>,
+                    ]
+                  : []),
+                ...group.map((appt) => (
+                  <div
+                    key={appt.id}
+                    className="flex items-center gap-4 rounded-[18px] p-4 text-left w-full border bg-white/70"
+                    style={{ borderColor: "rgba(92,3,49,0.08)" }}
                   >
-                    {appt.time}
-                  </span>
-                  <span
-                    className="h-1 w-1 rounded-full"
-                    style={{ background: STATUS_STYLE[appt.status].dot }}
-                  />
-                </div>
-                {/* Divisor colorido */}
-                <div
-                  className="w-[2px] self-stretch rounded-full shrink-0"
-                  style={{ background: STATUS_STYLE[appt.status].divider }}
-                />
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <p
-                    className="text-[14px] font-bold truncate"
-                    style={{ color: "var(--wine-900)", fontFamily: "var(--font-manrope)" }}
-                  >
-                    {appt.clientName}
-                  </p>
-                  <p
-                    className="text-[12px] mt-0.5 truncate"
-                    style={{ color: "var(--ink-500)", fontFamily: "var(--font-manrope)" }}
-                  >
-                    {appt.service} · {appt.duration}
-                  </p>
-                </div>
-                {/* Valor + badge */}
-                <div className="flex flex-col items-end shrink-0 gap-1">
-                  <span
-                    className="text-[13px] font-bold"
-                    style={{ color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}
-                  >
-                    {appt.price}
-                  </span>
-                  <span
-                    className="rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider"
-                    style={{
-                      background: STATUS_STYLE[appt.status].bg,
-                      color: STATUS_STYLE[appt.status].text,
-                      fontFamily: "var(--font-manrope)",
-                    }}
-                  >
-                    {STATUS_STYLE[appt.status].label}
-                  </span>
-                </div>
-              </div>
-            ))}
+                    {/* Hora + indicador de status */}
+                    <div className="flex flex-col items-center gap-1 shrink-0">
+                      <span
+                        className="text-[13px] font-bold"
+                        style={{ color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}
+                      >
+                        {appt.time}
+                      </span>
+                      <span
+                        className="h-1 w-1 rounded-full"
+                        style={{ background: STATUS_STYLE[appt.status].dot }}
+                      />
+                    </div>
+                    {/* Divisor colorido */}
+                    <div
+                      className="w-[2px] self-stretch rounded-full shrink-0"
+                      style={{ background: STATUS_STYLE[appt.status].divider }}
+                    />
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <p
+                        className="text-[14px] font-bold truncate"
+                        style={{ color: "var(--wine-900)", fontFamily: "var(--font-manrope)" }}
+                      >
+                        {appt.clientName}
+                      </p>
+                      <p
+                        className="text-[12px] mt-0.5 truncate"
+                        style={{ color: "var(--ink-500)", fontFamily: "var(--font-manrope)" }}
+                      >
+                        {appt.service} · {appt.duration}
+                      </p>
+                    </div>
+                    {/* Valor + badge */}
+                    <div className="flex flex-col items-end shrink-0 gap-1">
+                      <span
+                        className="text-[13px] font-bold"
+                        style={{ color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}
+                      >
+                        {appt.price}
+                      </span>
+                      <span
+                        className="rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider"
+                        style={{
+                          background: STATUS_STYLE[appt.status].bg,
+                          color: STATUS_STYLE[appt.status].text,
+                          fontFamily: "var(--font-manrope)",
+                        }}
+                      >
+                        {STATUS_STYLE[appt.status].label}
+                      </span>
+                    </div>
+                  </div>
+                )),
+              ]);
+            })()}
           </div>
         )}
       </div>

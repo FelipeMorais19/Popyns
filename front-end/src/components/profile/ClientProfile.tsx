@@ -119,22 +119,52 @@ const MOCK_PROFESSIONALS = [
   {
     id: "mock-prof-1",
     name: "Mariana Silva",
-    specialty: "Manicure & Pedicure",
+    specialty: "Pedicure",
     rating: 4.9,
     reviewsCount: 42,
-    avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120",
+    seals: 3,
+    avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300",
+    coverUrl: "https://images.unsplash.com/photo-1519415387722-a1c3bbef716c?auto=format&fit=crop&q=80&w=800",
     city: "São Paulo",
-    bio: "Especialista em unhas em gel e nail art com mais de 5 anos de experiência.",
+    bio: "Especialista em pedicure com mais de 5 anos de experiência. Apaixonada por transformar os pés das clientes com todo o cuidado e higiene que você merece. Atendo em domicílio com equipamentos esterilizados.",
+    services: ["Pedicure"],
+    certifications: [
+      { name: "Técnica em Nail Art Avançada", issuer: "Instituto de Beleza Paulista", date: "Mar 2023", description: "Curso avançado focado em nail art com técnicas de pintura livre, carimbos e decorações 3D. Aprendi a trabalhar com diferentes tipos de gel e materiais para criar designs únicos para cada cliente." },
+      { name: "Especialização em Pedicure em Gel", issuer: "Beauty Academy SP", date: "Jul 2022", description: "Especialização completa em pedicure com gel de alta durabilidade. Técnicas de preparação, modelagem e finalização para garantir um resultado impecável que dura até 6 semanas." },
+    ],
+    reviews: [
+      { id: "r1", clientName: "Ana Paula", clientPhoto: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=80", rating: 5, title: "Profissional incrível!", date: "10 de junho de 2026", specialty: "Pedicure", comment: "Atendimento impecável, super caprichosa e pontual. Já indiquei para todas as minhas amigas!" },
+      { id: "r2", clientName: "Fernanda G.", clientPhoto: "", rating: 4, title: "Muito boa, recomendo", date: "2 de maio de 2026", specialty: "Pedicure", comment: "Resultado ficou ótimo e ela usa materiais de qualidade. Só acho que poderia ter um pouquinho mais de opções de esmalte." },
+      { id: "r3", clientName: "Juliana T.", clientPhoto: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&q=80&w=80", rating: 5, title: "Melhor pedicure da cidade!", date: "15 de abril de 2026", specialty: "Pedicure", comment: "Fiz pedicure em gel com ela e ficou absolutamente lindo. Durou muito mais do que eu esperava. Com certeza voltarei!" },
+      { id: "r4", clientName: "Bruna C.", clientPhoto: "", rating: 5, title: "Superou minhas expectativas!", date: "30 de março de 2026", specialty: "Pedicure", comment: "Nunca tinha feito pedicure em domicílio e agora não quero mais sair de casa pra isso. Ela traz tudo organizado e o resultado é perfeito." },
+      { id: "r5", clientName: "Tatiane R.", clientPhoto: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=80", rating: 4, title: "Ótima profissional", date: "14 de março de 2026", specialty: "Pedicure", comment: "Muito caprichosa e atenciosa. O esmalte durou mais de 3 semanas. Voltarei com certeza!" },
+      { id: "r6", clientName: "Monique A.", clientPhoto: "", rating: 5, title: "Adorei, 10 estrelas!", date: "28 de fevereiro de 2026", specialty: "Pedicure", comment: "Além de um trabalho lindo, ela é super simpática e o atendimento foi rápido. Minha pedicure favorita daqui pra frente." },
+      { id: "r7", clientName: "Débora S.", clientPhoto: "", rating: 3, title: "Boa, mas atrasou um pouco", date: "10 de fevereiro de 2026", specialty: "Pedicure", comment: "O trabalho ficou bonito, mas ela chegou uns 20 minutos atrasada sem avisar antes. O resultado compensou, mas prefiro ser avisada." },
+    ],
   },
   {
     id: "mock-prof-2",
     name: "Beatriz Santos",
-    specialty: "Estética & Sobrancelhas",
+    specialty: "Designer de sobrancelha",
     rating: 5.0,
     reviewsCount: 28,
-    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120",
+    seals: 5,
+    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300",
+    coverUrl: "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?auto=format&fit=crop&q=80&w=800",
     city: "Campinas",
-    bio: "Formada em estética corporal e facial. Design de sobrancelhas personalizado.",
+    bio: "Especialista em design de sobrancelhas com técnica personalizada para cada rosto. Cada sobrancelha é única e merece um mapeamento exclusivo. Atendo em domicílio com materiais de alta qualidade.",
+    services: ["Designer de sobrancelha", "Micropigmentadora"],
+    certifications: [
+      { name: "Designer de Sobrancelhas Avançada", issuer: "Faculdade Anhanguera", date: "Dez 2020", description: "Formação completa em design e mapeamento de sobrancelhas com base na análise do rosto de cada cliente. Técnicas de henna, laminação e brow lifting para realçar a beleza natural." },
+      { name: "Micropigmentação de Sobrancelhas", issuer: "Academia Brow Expert", date: "Fev 2022", description: "Certificação em micropigmentação pelo método fio a fio e sombreado. Trabalho com pigmentos dermais de alta fixação para resultados naturais e duradouros de até 2 anos." },
+    ],
+    reviews: [
+      { id: "r1", clientName: "Larissa M.", clientPhoto: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=80", rating: 5, title: "Sobrancelha dos sonhos!", date: "18 de junho de 2026", specialty: "Designer de sobrancelha", comment: "Mapeou meu rosto com cuidado e o resultado foi surreal. Parece que nasci com essa sobrancelha!" },
+      { id: "r2", clientName: "Carla B.", clientPhoto: "", rating: 5, title: "Perfeita! Voltarei sempre", date: "5 de maio de 2026", specialty: "Designer de sobrancelha", comment: "Já fui em várias profissionais e Beatriz é disparada a melhor. Técnica impecável e muito cuidadosa." },
+      { id: "r3", clientName: "Viviane P.", clientPhoto: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=80", rating: 5, title: "Transformação incrível!", date: "22 de abril de 2026", specialty: "Micropigmentadora", comment: "Fiz micropigmentação e acordei todo dia amando minhas sobrancelhas. Trabalho preciso, resultado natural e duradouro." },
+      { id: "r4", clientName: "Isabela F.", clientPhoto: "", rating: 4, title: "Muito satisfeita", date: "8 de abril de 2026", specialty: "Designer de sobrancelha", comment: "Ótimo mapeamento, ela explicou tudo antes de começar. Fiquei feliz com o resultado, só precisei de um pequeno ajuste depois." },
+      { id: "r5", clientName: "Nádia C.", clientPhoto: "", rating: 5, title: "Recomendo de olhos fechados!", date: "15 de março de 2026", specialty: "Designer de sobrancelha", comment: "Tinha medo de designer de sobrancelha mas ela me deixou super tranquila. Resultado equilibrado e natural, exatamente o que eu queria." },
+    ],
   },
   {
     id: "mock-prof-3",
@@ -142,9 +172,24 @@ const MOCK_PROFESSIONALS = [
     specialty: "Massoterapeuta",
     rating: 4.8,
     reviewsCount: 19,
-    avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=120",
+    seals: 1,
+    avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=300",
+    coverUrl: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=800",
     city: "São Bernardo",
-    bio: "Massagens relaxantes, drenagem linfática e liberação miofascial.",
+    bio: "Massoterapeuta certificada com foco em bem-estar e relaxamento. Realizo massagens terapêuticas, relaxantes e drenagem linfática manual. Meu objetivo é proporcionar equilíbrio entre corpo e mente no conforto da sua casa.",
+    services: ["Massoterapeuta"],
+    certifications: [
+      { name: "Massoterapeuta Clínica", issuer: "Escola de Massoterapia do Brasil", date: "Jun 2021", description: "Formação completa em massoterapia clínica com foco em alívio de tensões musculares, dores crônicas e bem-estar geral. Técnicas suecas, relaxantes e terapêuticas aplicadas no domicílio do cliente." },
+      { name: "Drenagem Linfática Manual – Método Vodder", issuer: "Instituto Terapêutico ABC", date: "Nov 2022", description: "Certificação no método Vodder de drenagem linfática manual, reconhecido internacionalmente. Indicado para redução de inchaços, pós-operatório e melhora da circulação. Resultados visíveis já na primeira sessão." },
+    ],
+    reviews: [
+      { id: "r1", clientName: "Renata F.", clientPhoto: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=80", rating: 5, title: "Relaxamento total!", date: "20 de junho de 2026", specialty: "Massoterapeuta", comment: "A massagem foi maravilhosa! Saí completamente renovada. Ela tem um toque muito leve e preciso, recomendo demais." },
+      { id: "r2", clientName: "Patrícia S.", clientPhoto: "", rating: 4, title: "Ótima profissional", date: "8 de junho de 2026", specialty: "Massoterapeuta", comment: "Drenagem linfática excelente, já senti resultado logo na primeira sessão. Agendei mais 4 sessões na hora!" },
+      { id: "r3", clientName: "Gisele M.", clientPhoto: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&q=80&w=80", rating: 5, title: "Minha terapeuta favorita!", date: "1 de junho de 2026", specialty: "Massoterapeuta", comment: "Faço sessões semanais com a Camila há 2 meses e a diferença no meu corpo é impressionante. Ela é muito atenciosa e personaliza cada sessão." },
+      { id: "r4", clientName: "Cintia L.", clientPhoto: "", rating: 5, title: "Cura de verdade", date: "18 de maio de 2026", specialty: "Massoterapeuta", comment: "Tinha muita tensão nas costas por conta do trabalho remoto. Depois de 3 sessões com ela, as dores sumiram. Recomendo muito!" },
+      { id: "r5", clientName: "Aline T.", clientPhoto: "", rating: 4, title: "Muito bem, voltarei", date: "5 de maio de 2026", specialty: "Massoterapeuta", comment: "Massagem relaxante muito boa. Ela chegou no horário combinado e foi super profissional. Só queria que a sessão durasse mais!" },
+      { id: "r6", clientName: "Roberta V.", clientPhoto: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=80", rating: 5, title: "Melhor investimento!", date: "20 de abril de 2026", specialty: "Massoterapeuta", comment: "Presentes de aniversário que me dei foi essa massagem. Completamente apaixonada, já agendei o próximo mês inteiro." },
+    ],
   },
 ];
 
@@ -154,21 +199,14 @@ const MOCK_BOOKINGS: Booking[] = [
     id: "mock-booking-1",
     client_id: "me",
     professional_id: "mock-prof-1",
-    status: "completed",
+    status: "pending",
     mode: "scheduled",
-    scheduled_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    scheduled_at: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString(),
     total_cents: 9000,
     payment_method: "pix",
-    address_snapshot: {
-      street: "Av. Paulista",
-      number: "1000",
-      complement: "Apto 42",
-      label: "Casa",
-      city: "São Paulo",
-      state: "SP",
-    },
-    created_at: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-    service_name: "Pé e Mão Completo",
+    address_snapshot: { street: "Av. Paulista", number: "1000", complement: "Apto 42", label: "Casa", city: "São Paulo", state: "SP" },
+    created_at: new Date().toISOString(),
+    service_name: "Pedicure Completa",
     professional_profile: {
       user: {
         full_name: "Mariana Silva",
@@ -180,25 +218,75 @@ const MOCK_BOOKINGS: Booking[] = [
     id: "mock-booking-2",
     client_id: "me",
     professional_id: "mock-prof-2",
+    status: "pending",
+    mode: "scheduled",
+    scheduled_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+    total_cents: 6500,
+    payment_method: "pix",
+    address_snapshot: { street: "Rua Oscar Freire", number: "450", complement: "Casa", label: "Trabalho", city: "São Paulo", state: "SP" },
+    created_at: new Date().toISOString(),
+    service_name: "Pedicure em Gel",
+    professional_profile: {
+      user: {
+        full_name: "Camila Torres",
+        avatar_url: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=120",
+      },
+    },
+  },
+  {
+    id: "mock-booking-3",
+    client_id: "me",
+    professional_id: "mock-prof-3",
     status: "accepted",
     mode: "scheduled",
     scheduled_at: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
     total_cents: 12000,
     payment_method: "pix",
-    address_snapshot: {
-      street: "Av. Paulista",
-      number: "1000",
-      complement: "Apto 42",
-      label: "Casa",
-      city: "São Paulo",
-      state: "SP",
-    },
+    address_snapshot: { street: "Av. Paulista", number: "1000", complement: "Apto 42", label: "Casa", city: "São Paulo", state: "SP" },
     created_at: new Date().toISOString(),
-    service_name: "Design de Sobrancelhas + Buço",
+    service_name: "Design de Sobrancelhas",
     professional_profile: {
       user: {
         full_name: "Beatriz Santos",
         avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120",
+      },
+    },
+  },
+  {
+    id: "mock-booking-4",
+    client_id: "me",
+    professional_id: "mock-prof-4",
+    status: "completed",
+    mode: "scheduled",
+    scheduled_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    total_cents: 8500,
+    payment_method: "pix",
+    address_snapshot: { street: "Rua Haddock Lobo", number: "200", label: "Casa", city: "São Paulo", state: "SP" },
+    created_at: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+    service_name: "Limpeza de Pele Profunda",
+    professional_profile: {
+      user: {
+        full_name: "Renata Oliveira",
+        avatar_url: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&q=80&w=120",
+      },
+    },
+  },
+  {
+    id: "mock-booking-5",
+    client_id: "me",
+    professional_id: "mock-prof-5",
+    status: "cancelled",
+    mode: "scheduled",
+    scheduled_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    total_cents: 5500,
+    payment_method: "pix",
+    address_snapshot: { street: "Av. Brigadeiro Faria Lima", number: "3900", label: "Trabalho", city: "São Paulo", state: "SP" },
+    created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    service_name: "Pedicure Completa",
+    professional_profile: {
+      user: {
+        full_name: "Juliana Barros",
+        avatar_url: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=120",
       },
     },
   },
@@ -225,6 +313,7 @@ export function ClientProfile() {
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loadingData, setLoadingData] = useState(false);
+  const [mockStatuses, setMockStatuses] = useState<Record<string, string>>({});
 
   // Tracks whether we've already attempted to seed the onboarding address
   // into public.addresses, to avoid loops/retries on transient state.
@@ -299,6 +388,8 @@ export function ClientProfile() {
 
   // Interactive Mock Favorites (represented as active mock IDs)
   const [localMockFavorites, setLocalMockFavorites] = useState<string[]>(["mock-prof-1", "mock-prof-3"]);
+  const [selectedProfId, setSelectedProfId] = useState<string | null>(null);
+  const [visibleReviewsCount, setVisibleReviewsCount] = useState(3);
 
   // 1) Fetch database user id from public.users mapping.
   // Tenta SELECT direto pelo clerk_user_id; se não achar (ex: usuário trocou de
@@ -843,6 +934,11 @@ export function ClientProfile() {
 
   // Confirm booking (pending → accepted)
   const handleConfirmBooking = async (bookingId: string) => {
+    if (bookingId.startsWith("mock-")) {
+      setMockStatuses((prev) => ({ ...prev, [bookingId]: "accepted" }));
+      showToast("Atendimento confirmado!", "add");
+      return;
+    }
     try {
       const { error } = await supabase
         .from("bookings")
@@ -863,6 +959,11 @@ export function ClientProfile() {
       "Cancelar Atendimento",
       "Tem certeza que deseja cancelar este atendimento?",
       async () => {
+        if (bookingId.startsWith("mock-")) {
+          setMockStatuses((prev) => ({ ...prev, [bookingId]: "cancelled" }));
+          showToast("Atendimento cancelado.", "delete");
+          return;
+        }
         try {
           const { error } = await supabase
             .from("bookings")
@@ -930,7 +1031,7 @@ export function ClientProfile() {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "pending":
-        return { label: "Aguardando", color: "text-amber-700 bg-amber-100 border-amber-200" };
+        return { label: "Pendente", color: "text-amber-700 bg-amber-100 border-amber-200" };
       case "accepted":
       case "on_the_way":
       case "arrived":
@@ -1489,7 +1590,8 @@ export function ClientProfile() {
                   return (
                     <div
                       key={prof.id}
-                      className="flex gap-4 rounded-[22px] p-4 border border-[rgba(92,3,49,0.08)] bg-white/55 hover:bg-white/70 transition-all items-center"
+                      onClick={() => setSelectedProfId(prof.id)}
+                      className="flex gap-4 rounded-[22px] p-4 border border-[rgba(92,3,49,0.08)] bg-white/55 hover:bg-white/70 transition-all items-center cursor-pointer active:scale-[0.98]"
                     >
                       <div className="h-14 w-14 rounded-full overflow-hidden border border-[rgba(92,3,49,0.12)] shrink-0">
                         <img src={prof.avatarUrl} alt={prof.name} className="h-full w-full object-cover" />
@@ -1509,7 +1611,7 @@ export function ClientProfile() {
 
                       <button
                         type="button"
-                        onClick={() => handleToggleMockFavorite(prof.id)}
+                        onClick={(e) => { e.stopPropagation(); handleToggleMockFavorite(prof.id); }}
                         className={`p-2.5 transition-colors shrink-0 ${isFav ? "text-[var(--wine-800)] hover:text-[rgba(92,3,49,0.35)]" : "text-[rgba(92,3,49,0.25)] hover:text-[var(--wine-800)]"}`}
                       >
                         <IconHeart size={18} fill={isFav ? "currentColor" : "none"} />
@@ -1536,136 +1638,107 @@ export function ClientProfile() {
                 <span className="text-[10px] text-[var(--ink-500)]">Total: {bookings.length + MOCK_BOOKINGS.length}</span>
               </div>
 
-              {/* Database Bookings */}
-              {bookings.map((bk) => {
-                const statusInfo = getStatusLabel(bk.status);
-                const prof = bk.professional_profile;
-                const formattedDate = formatDateTime(bk.scheduled_at || bk.created_at);
-                const hasDetails = !!bk.address_snapshot;
+              {/* Lista unificada agrupada: Pendente → Confirmado → Concluído → Cancelado */}
+              {(() => {
+                const getGroupIndex = (status: string) => {
+                  if (status === "pending") return 0;
+                  if (["accepted", "on_the_way", "arrived", "started", "in_progress"].includes(status)) return 1;
+                  if (status === "completed") return 2;
+                  return 3;
+                };
 
-                return (
-                  <div
-                    key={bk.id}
-                    className="flex flex-col gap-3 rounded-[22px] p-4.5 border border-[rgba(92,3,49,0.08)] bg-white/55"
-                  >
-                    <div className="flex justify-between items-start">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full overflow-hidden border border-[rgba(92,3,49,0.12)] shrink-0">
-                          {prof?.user?.avatar_url ? (
-                            <img src={prof.user.avatar_url} alt={prof.user.full_name} className="h-full w-full object-cover" />
-                          ) : (
-                            <div className="h-full w-full bg-wine-800 flex items-center justify-center text-[var(--cream-100)] font-bold uppercase text-[12px]">
-                              {prof?.user?.full_name?.[0] ?? "P"}
+                const allBookings = [
+                  ...bookings,
+                  ...MOCK_BOOKINGS.map((bk) => ({ ...bk, status: mockStatuses[bk.id] ?? bk.status })),
+                ];
+                const groups = [0, 1, 2, 3]
+                  .map((gi) => allBookings.filter((bk) => getGroupIndex(bk.status) === gi))
+                  .filter((g) => g.length > 0);
+
+                return groups.flatMap((group, gi) => [
+                  ...(gi > 0 ? [
+                    <div key={`sep-${gi}`} className="flex items-center gap-2 py-1">
+                      <div className="flex-1 border-t border-dashed" style={{ borderColor: "rgba(92,3,49,0.18)" }} />
+                      <div className="h-1.5 w-1.5 rounded-full shrink-0" style={{ background: "rgba(92,3,49,0.22)" }} />
+                      <div className="flex-1 border-t border-dashed" style={{ borderColor: "rgba(92,3,49,0.18)" }} />
+                    </div>,
+                  ] : []),
+                  ...group.map((bk) => {
+                    const statusInfo = getStatusLabel(bk.status);
+                    const prof = bk.professional_profile;
+                    const formattedDate = formatDateTime(bk.scheduled_at || bk.created_at);
+                    const hasDetails = !!bk.address_snapshot;
+                    const isPending = bk.status === "pending";
+
+                    return (
+                      <div
+                        key={bk.id}
+                        className="flex flex-col gap-3 rounded-[22px] p-4.5 border border-[rgba(92,3,49,0.08)] bg-white/55"
+                      >
+                        <div className="flex justify-between items-start">
+                          <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-full overflow-hidden border border-[rgba(92,3,49,0.12)] shrink-0">
+                              {prof?.user?.avatar_url ? (
+                                <img src={prof.user.avatar_url} alt={prof.user.full_name} className="h-full w-full object-cover" />
+                              ) : (
+                                <div className="h-full w-full bg-wine-800 flex items-center justify-center text-[var(--cream-100)] font-bold uppercase text-[12px]">
+                                  {prof?.user?.full_name?.[0] ?? "P"}
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
-                        <div className="flex flex-col">
-                          <span className="text-[12px] font-bold text-[var(--wine-900)]">{prof?.user?.full_name ?? "Profissional POPYNS"}</span>
-                          <span className="text-[10px] text-[var(--ink-500)] mt-0.5">{formattedDate}</span>
-                        </div>
-                      </div>
-
-                      <span className={`text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${statusInfo.color}`}>
-                        {statusInfo.label}
-                      </span>
-                    </div>
-
-                    <div className="border-t border-[rgba(92,3,49,0.08)] pt-3 flex flex-col gap-1.5">
-                      <div className="flex justify-between text-[12px]">
-                        <span className="text-[var(--ink-500)]">{bk.service_name || "Serviço POPYNS"}</span>
-                        <span className="text-[var(--wine-900)] font-semibold">{formatCurrency(bk.total_cents)}</span>
-                      </div>
-
-                      {hasDetails && (
-                        <div className="flex items-start gap-1.5 mt-1 text-[10px] text-[rgba(92,3,49,0.55)]">
-                          <span className="mt-0.5 shrink-0"><IconPin size={12} /></span>
-                          <span className="leading-relaxed">
-                            {bk.address_snapshot.label && `[${bk.address_snapshot.label}] `}
-                            {bk.address_snapshot.street}, {bk.address_snapshot.number}
-                            {bk.address_snapshot.complement && ` · ${bk.address_snapshot.complement}`}
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Ações da cliente */}
-                      {(bk.status === "pending" || bk.status === "accepted") && (
-                        <div className="flex gap-2 mt-2 pt-2 border-t border-[rgba(92,3,49,0.06)]">
-                          {bk.status === "pending" && (
-                            <button
-                              type="button"
-                              onClick={() => handleConfirmBooking(bk.id)}
-                              className="flex-1 h-9 rounded-xl text-[11px] font-bold uppercase tracking-wider active:scale-[0.98] transition-all"
-                              style={{ background: "var(--wine-800)", color: "var(--cream-100)", fontFamily: "var(--font-manrope)" }}
-                            >
-                              Confirmar
-                            </button>
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => handleCancelBooking(bk.id)}
-                            className={`${bk.status === "pending" ? "flex-1" : "w-full"} h-9 rounded-xl border text-[11px] font-bold uppercase tracking-wider hover:bg-[rgba(92,3,49,0.04)] active:scale-[0.98] transition-all`}
-                            style={{ borderColor: "rgba(92,3,49,0.2)", color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}
-                          >
-                            Cancelar
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-
-              {/* Mock Bookings suggestions for testing UI */}
-              <div className="flex flex-col gap-3.5 mt-2">
-                <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-[rgba(92,3,49,0.45)]">Agendamentos de Demonstração</span>
-                {MOCK_BOOKINGS.map((bk) => {
-                  const statusInfo = getStatusLabel(bk.status);
-                  const prof = bk.professional_profile;
-                  const formattedDate = formatDateTime(bk.scheduled_at || bk.created_at);
-
-                  return (
-                    <div
-                      key={bk.id}
-                      className="flex flex-col gap-3 rounded-[22px] p-4.5 border border-[rgba(92,3,49,0.08)] bg-white/55"
-                    >
-                      <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full overflow-hidden border border-[rgba(92,3,49,0.12)] shrink-0">
-                            <img src={prof?.user.avatar_url} alt={prof?.user.full_name} className="h-full w-full object-cover" />
+                            <div className="flex flex-col">
+                              <span className="text-[12px] font-bold text-[var(--wine-900)]">{prof?.user?.full_name ?? "Profissional POPYNS"}</span>
+                              <span className="text-[10px] text-[var(--ink-500)] mt-0.5">{formattedDate}</span>
+                            </div>
                           </div>
-                          <div className="flex flex-col">
-                            <span className="text-[12px] font-bold text-[var(--wine-900)]">{prof?.user.full_name}</span>
-                            <span className="text-[10px] text-[var(--ink-500)] mt-0.5">{formattedDate}</span>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <span className="text-[7px] font-bold uppercase tracking-wider px-1 bg-[rgba(92,3,49,0.1)] text-[var(--ink-500)] rounded">Demo</span>
                           <span className={`text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${statusInfo.color}`}>
                             {statusInfo.label}
                           </span>
                         </div>
-                      </div>
 
-                      <div className="border-t border-[rgba(92,3,49,0.08)] pt-3 flex flex-col gap-1.5">
-                        <div className="flex justify-between text-[12px]">
-                          <span className="text-[var(--ink-500)]">{bk.service_name}</span>
-                          <span className="text-[var(--wine-900)] font-semibold">{formatCurrency(bk.total_cents)}</span>
-                        </div>
+                        <div className="border-t border-[rgba(92,3,49,0.08)] pt-3 flex flex-col gap-1.5">
+                          <div className="flex justify-between text-[12px]">
+                            <span className="text-[var(--ink-500)]">{bk.service_name || "Serviço POPYNS"}</span>
+                            <span className="text-[var(--wine-900)] font-semibold">{formatCurrency(bk.total_cents)}</span>
+                          </div>
 
-                        <div className="flex items-start gap-1.5 mt-1 text-[10px] text-[rgba(92,3,49,0.55)]">
-                          <span className="mt-0.5 shrink-0"><IconPin size={12} /></span>
-                          <span className="leading-relaxed">
-                            {bk.address_snapshot.label && `[${bk.address_snapshot.label}] `}
-                            {bk.address_snapshot.street}, {bk.address_snapshot.number}
-                            {bk.address_snapshot.complement && ` · ${bk.address_snapshot.complement}`}
-                          </span>
+                          {hasDetails && (
+                            <div className="flex items-start gap-1.5 mt-1 text-[10px] text-[rgba(92,3,49,0.55)]">
+                              <span className="mt-0.5 shrink-0"><IconPin size={12} /></span>
+                              <span className="leading-relaxed">
+                                {bk.address_snapshot.label && `[${bk.address_snapshot.label}] `}
+                                {bk.address_snapshot.street}, {bk.address_snapshot.number}
+                                {bk.address_snapshot.complement && ` · ${bk.address_snapshot.complement}`}
+                              </span>
+                            </div>
+                          )}
+
+                          {isPending && (
+                            <div className="flex gap-2 mt-3">
+                              <button
+                                type="button"
+                                onClick={() => handleConfirmBooking(bk.id)}
+                                className="flex-1 h-7 rounded-full border text-[10px] font-bold uppercase tracking-wider active:scale-[0.98] transition-all text-pink-700 bg-pink-100 border-pink-200"
+                                style={{ fontFamily: "var(--font-manrope)" }}
+                              >
+                                Confirmar
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleCancelBooking(bk.id)}
+                                className="flex-1 h-7 rounded-full border text-[10px] font-bold uppercase tracking-wider active:scale-[0.98] transition-all text-red-700 bg-red-100 border-red-200"
+                                style={{ fontFamily: "var(--font-manrope)" }}
+                              >
+                                Cancelar
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  }),
+                ]);
+              })()}
             </motion.div>
           )}
         </AnimatePresence>
@@ -1778,6 +1851,248 @@ export function ClientProfile() {
             </motion.div>
           </div>
         )}
+      </AnimatePresence>
+
+      {/* Professional Profile Overlay */}
+      <AnimatePresence>
+        {selectedProfId && (() => {
+          const prof = MOCK_PROFESSIONALS.find(p => p.id === selectedProfId);
+          if (!prof) return null;
+          const isFav = localMockFavorites.includes(prof.id);
+          return (
+            <motion.div key="prof-profile"
+              initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 280 }}
+              className="absolute inset-0 z-[90] flex flex-col overflow-hidden"
+              style={{ background: "var(--cream-100)", fontFamily: "var(--font-manrope)" }}>
+
+              {/* Cover — sem avatar, apenas foto + botões */}
+              <div className="relative shrink-0" style={{ height: 160 }}>
+                <img src={prof.coverUrl} alt="" className="w-full h-full object-cover" />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(92,3,49,0.18) 0%, rgba(92,3,49,0.5) 100%)" }}/>
+                <button type="button" onClick={() => { setSelectedProfId(null); setVisibleReviewsCount(3); }}
+                  className="absolute top-4 left-4 h-9 w-9 rounded-full flex items-center justify-center backdrop-blur-md"
+                  style={{ background: "rgba(92,3,49,0.55)" }}>
+                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M15 18l-6-6 6-6"/>
+                  </svg>
+                </button>
+                <button type="button" onClick={() => handleToggleMockFavorite(prof.id)}
+                  className="absolute top-4 right-4 h-9 w-9 rounded-full flex items-center justify-center backdrop-blur-md"
+                  style={{ background: "rgba(92,3,49,0.55)", color: isFav ? "#f9a8d4" : "white" }}>
+                  <IconHeart size={16} fill={isFav ? "currentColor" : "none"} />
+                </button>
+              </div>
+
+              {/* Faixa dos selos — shrink-0, estática, avatar posicionado aqui subindo pro cover */}
+              <div className="shrink-0 relative" style={{ height: 52, background: "var(--cream-100)", overflow: "visible" }}>
+                {/* Avatar sobe 34px acima desta faixa, entrando no cover */}
+                <div className="absolute rounded-full border-4 border-white overflow-hidden shadow-lg"
+                  style={{ top: -34, left: 20, width: 80, height: 80, zIndex: 20 }}>
+                  <img src={prof.avatarUrl} alt={prof.name} className="h-full w-full object-cover" />
+                </div>
+                {/* Selos — circleStyle idêntico ao PopynsLogo, sem fundo */}
+                <div className="absolute flex items-center gap-[6px]" style={{ top: "50%", transform: "translateY(-50%)", left: 104 }}>
+                  {[1,2,3,4,5].map((n) => {
+                    const active = n <= (prof.seals ?? 0);
+                    const size = 12;
+                    const diameter = size * 1.2;
+                    const borderWidth = Math.max(2, diameter * 0.06);
+                    const fontSize = diameter * 0.74;
+                    const ink = "#5C0331";
+                    return (
+                      <span key={n} style={{
+                        width: diameter, height: diameter,
+                        borderRadius: "9999px",
+                        border: `${borderWidth}px solid ${ink}`,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontFamily: "var(--font-poppins)",
+                        fontWeight: 800,
+                        fontSize: fontSize,
+                        lineHeight: 1,
+                        color: ink,
+                        flexShrink: 0,
+                        opacity: active ? 1 : 0.25,
+                        userSelect: "none",
+                      }}>P</span>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Conteúdo scrollável */}
+              <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: "none", paddingBottom: 40 }}>
+                {/* Name + info */}
+                <div className="px-5 pt-6 pb-5" style={{ borderBottom: "1px solid rgba(92,3,49,0.08)" }}>
+                  <h1 className="text-[22px] font-bold" style={{ color: "var(--wine-900)", fontFamily: "var(--font-cormorant)", lineHeight: 1.2 }}>{prof.name}</h1>
+                  <p className="text-[12px] mt-1 font-semibold uppercase tracking-wider" style={{ color: "rgba(92,3,49,0.5)" }}>{prof.specialty}</p>
+                  <div className="flex items-center gap-3 mt-2">
+                    <div className="flex items-center gap-1">
+                      <svg width={13} height={13} viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" strokeWidth={1}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <span className="text-[12px] font-bold" style={{ color: "var(--wine-900)" }}>{prof.rating}</span>
+                    </div>
+                    <span className="text-[11px]" style={{ color: "rgba(92,3,49,0.45)" }}>·</span>
+                    <div className="flex items-center gap-1" style={{ color: "rgba(92,3,49,0.45)" }}>
+                      <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx={12} cy={10} r={3}/></svg>
+                      <span className="text-[11px]">{prof.city}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Especialidades */}
+                <div className="px-5 py-5" style={{ borderBottom: "1px solid rgba(92,3,49,0.08)" }}>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] mb-3" style={{ color: "rgba(92,3,49,0.45)" }}>Especialidades</p>
+                  <div className="flex flex-wrap gap-2">
+                    {prof.services.map((s, i) => (
+                      <span key={i} className="px-3 py-1.5 rounded-full text-[11px] font-semibold"
+                        style={{ background: "rgba(92,3,49,0.07)", color: "var(--wine-800)" }}>{s}</span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bio */}
+                <div className="px-5 py-5" style={{ borderBottom: "1px solid rgba(92,3,49,0.08)" }}>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] mb-3" style={{ color: "rgba(92,3,49,0.45)" }}>Sobre</p>
+                  <p className="text-[13px] leading-relaxed" style={{ color: "var(--ink-500)" }}>{prof.bio}</p>
+                </div>
+
+                {/* Certifications */}
+                <div className="px-5 py-5" style={{ borderBottom: "1px solid rgba(92,3,49,0.08)" }}>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] mb-4" style={{ color: "rgba(92,3,49,0.45)" }}>Certificações</p>
+                  <div className="flex flex-col gap-4">
+                    {prof.certifications.map((cert, i) => (
+                      <div key={i} className="rounded-[18px] overflow-hidden border" style={{ borderColor: "rgba(92,3,49,0.1)", background: "white" }}>
+                        {/* Certificate preview */}
+                        <div className="w-full flex items-center justify-center px-5 py-4" style={{ background: "linear-gradient(135deg,#fdf6ee 0%,#f5e9d8 100%)", height: 140, position: "relative" }}>
+                          {/* Decorative corner borders */}
+                          <div style={{ position:"absolute", top:10, left:10, width:18, height:18, borderTop:"2px solid rgba(92,3,49,0.35)", borderLeft:"2px solid rgba(92,3,49,0.35)", borderRadius:"2px 0 0 0" }}/>
+                          <div style={{ position:"absolute", top:10, right:10, width:18, height:18, borderTop:"2px solid rgba(92,3,49,0.35)", borderRight:"2px solid rgba(92,3,49,0.35)", borderRadius:"0 2px 0 0" }}/>
+                          <div style={{ position:"absolute", bottom:10, left:10, width:18, height:18, borderBottom:"2px solid rgba(92,3,49,0.35)", borderLeft:"2px solid rgba(92,3,49,0.35)", borderRadius:"0 0 0 2px" }}/>
+                          <div style={{ position:"absolute", bottom:10, right:10, width:18, height:18, borderBottom:"2px solid rgba(92,3,49,0.35)", borderRight:"2px solid rgba(92,3,49,0.35)", borderRadius:"0 0 2px 0" }}/>
+                          {/* Inner content */}
+                          <div className="flex flex-col items-center gap-1.5 text-center">
+                            {/* Seal icon */}
+                            <svg width={28} height={28} viewBox="0 0 24 24" fill="none" stroke="rgba(92,3,49,0.5)" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round">
+                              <circle cx={12} cy={8} r={6}/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+                            </svg>
+                            <p className="text-[11px] font-bold leading-tight px-4" style={{ color:"var(--wine-800)", fontFamily:"var(--font-cormorant)", fontSize:14, lineHeight:1.3 }}>{cert.name}</p>
+                            <p className="text-[9px] font-semibold uppercase tracking-widest" style={{ color:"rgba(92,3,49,0.45)" }}>{cert.issuer}</p>
+                            <div style={{ width:40, height:1, background:"rgba(92,3,49,0.2)", marginTop:2 }}/>
+                            <p className="text-[9px]" style={{ color:"rgba(92,3,49,0.4)" }}>{cert.date}</p>
+                          </div>
+                        </div>
+                        <div className="px-4 py-3">
+                          <p className="text-[13px] font-bold" style={{ color: "var(--wine-900)" }}>{cert.name}</p>
+                          {cert.description && (
+                            <p className="text-[11px] mt-1.5 leading-relaxed" style={{ color: "rgba(92,3,49,0.55)" }}>{cert.description}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Avaliações */}
+                {prof.reviews && prof.reviews.length > 0 && (
+                  <div className="px-5 py-5">
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.14em]" style={{ color: "rgba(92,3,49,0.45)" }}>Avaliações</p>
+                      <span className="text-[10px]" style={{ color: "rgba(92,3,49,0.35)" }}>({prof.reviews.length})</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 mb-4">
+                      {[1,2,3,4,5].map((s) => (
+                        <svg key={s} width={13} height={13} viewBox="0 0 24 24" fill={s <= Math.round(prof.rating) ? "#d97706" : "none"} stroke="#d97706" strokeWidth={1.8}>
+                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                      ))}
+                      <span className="text-[12px] font-bold ml-1" style={{ color: "var(--wine-900)" }}>{prof.rating} de 5</span>
+                    </div>
+
+                    <div className="flex flex-col">
+                      {prof.reviews.slice(0, visibleReviewsCount).map((review, i) => (
+                        <div key={review.id} className="flex flex-col gap-2 py-4" style={{ borderTop: i > 0 ? "1px solid rgba(92,3,49,0.08)" : "none" }}>
+                          {/* Cliente */}
+                          <div className="flex items-center gap-2.5">
+                            {review.clientPhoto ? (
+                              <img src={review.clientPhoto} alt={review.clientName} className="h-8 w-8 rounded-full object-cover flex-shrink-0" />
+                            ) : (
+                              <div className="h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "rgba(92,3,49,0.1)" }}>
+                                <span className="text-[11px] font-bold uppercase" style={{ color: "var(--wine-800)" }}>
+                                  {review.clientName[0]}
+                                </span>
+                              </div>
+                            )}
+                            <span className="text-[13px] font-semibold" style={{ color: "var(--wine-900)", fontFamily: "var(--font-manrope)" }}>
+                              {review.clientName}
+                            </span>
+                          </div>
+
+                          {/* Estrelas + título */}
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <div className="flex items-center gap-[2px]">
+                              {[1,2,3,4,5].map((s) => (
+                                <svg key={s} width={13} height={13} viewBox="0 0 24 24" fill={s <= review.rating ? "#d97706" : "none"} stroke="#d97706" strokeWidth={1.8}>
+                                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                              ))}
+                            </div>
+                            <span className="text-[12px] font-bold" style={{ color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}>
+                              {review.title}
+                            </span>
+                          </div>
+
+                          {/* Data + especialidade */}
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-[10px]" style={{ color: "rgba(92,3,49,0.45)", fontFamily: "var(--font-manrope)" }}>
+                              Avaliado em {review.date}
+                            </span>
+                            <span style={{ color: "rgba(92,3,49,0.25)" }}>·</span>
+                            <span className="text-[10px] font-semibold rounded-full px-2 py-0.5" style={{ background: "rgba(92,3,49,0.07)", color: "var(--wine-800)", fontFamily: "var(--font-manrope)" }}>
+                              {review.specialty}
+                            </span>
+                          </div>
+
+                          {/* Comentário */}
+                          <p className="text-[12px] leading-relaxed" style={{ color: "var(--ink-500)", fontFamily: "var(--font-manrope)" }}>
+                            {review.comment}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+
+                    {visibleReviewsCount < prof.reviews.length && (
+                      <button
+                        type="button"
+                        onClick={() => setVisibleReviewsCount((n) => n + 3)}
+                        className="mt-1 w-full text-center text-[12px] transition-opacity hover:opacity-60 active:opacity-40"
+                        style={{
+                          color: "rgba(92,3,49,0.45)",
+                          fontFamily: "var(--font-manrope)",
+                          textDecoration: "underline",
+                          textUnderlineOffset: "3px",
+                          textDecorationColor: "rgba(92,3,49,0.25)",
+                        }}
+                      >
+                        Veja mais avaliações
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* CTA button */}
+              <div className="px-5 pb-10 pt-4 shrink-0" style={{ background: "var(--cream-100)", borderTop: "1px solid rgba(92,3,49,0.08)" }}>
+                <button type="button"
+                  className="w-full h-12 rounded-full text-[13px] font-bold uppercase tracking-wider"
+                  style={{ background: "var(--wine-800)", color: "var(--cream-100)" }}>
+                  Agendar Serviço
+                </button>
+              </div>
+            </motion.div>
+          );
+        })()}
       </AnimatePresence>
 
       {/* Toast Notification */}

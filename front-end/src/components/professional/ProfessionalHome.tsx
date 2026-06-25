@@ -13,6 +13,7 @@ import {
 import { ProfessionalProfile } from "./ProfessionalProfile";
 import { ProfessionalAgenda } from "./ProfessionalAgenda";
 import { ProfessionalGanhos } from "./ProfessionalGanhos";
+import { ProfessionalHistorico } from "./ProfessionalHistorico";
 
 // === Icons exclusivos desta tela ===
 const IconBell = ({ size = 20 }: { size?: number }) => (
@@ -33,6 +34,14 @@ const IconDollar = ({ size = 22 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
     <line x1="12" y1="1" x2="12" y2="23" />
     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+  </svg>
+);
+
+const IconHistorico = ({ size = 22 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 3v5h5" />
+    <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8" />
+    <path d="M12 7v5l4 2" />
   </svg>
 );
 
@@ -83,7 +92,7 @@ function greetingForHour(h: number) {
 const BRL = (n: number) =>
   n.toLocaleString("pt-BR", { minimumFractionDigits: 0 });
 
-type TabKey = "home" | "agenda" | "ganhos" | "perfil";
+type TabKey = "home" | "agenda" | "ganhos" | "historico" | "perfil";
 
 export function ProfessionalHome() {
   const { user } = useUser();
@@ -139,10 +148,14 @@ export function ProfessionalHome() {
         <div className="h-full" style={{ paddingBottom: "100px" }}>
           <ProfessionalGanhos />
         </div>
+      ) : activeTab === "historico" ? (
+        <div className="h-full" style={{ paddingBottom: "100px" }}>
+          <ProfessionalHistorico />
+        </div>
       ) : null}
       <div
         className="h-full overflow-y-auto"
-        style={{ display: (activeTab === "perfil" || activeTab === "agenda" || activeTab === "ganhos") ? "none" : undefined, paddingBottom: "120px" }}
+        style={{ display: (activeTab === "perfil" || activeTab === "agenda" || activeTab === "ganhos" || activeTab === "historico") ? "none" : undefined, paddingBottom: "120px" }}
       >
         {/* Header */}
         <div className="relative flex items-center justify-between px-6 pt-6 pb-1">
@@ -678,10 +691,11 @@ export function ProfessionalHome() {
         >
           {(
             [
-              { key: "home", Icon: IconHome, label: "Início" },
-              { key: "agenda", Icon: IconCalendar, label: "Agenda" },
-              { key: "ganhos", Icon: IconDollar, label: "Ganhos" },
-              { key: "perfil", Icon: IconUser, label: "Perfil" },
+              { key: "home",      Icon: IconHome,      label: "Início"    },
+              { key: "agenda",    Icon: IconCalendar,  label: "Agenda"    },
+              { key: "ganhos",    Icon: IconDollar,    label: "Ganhos"    },
+              { key: "historico", Icon: IconHistorico, label: "Histórico" },
+              { key: "perfil",    Icon: IconUser,      label: "Perfil"    },
             ] as const
           ).map(({ key, Icon, label }) => {
             const active = activeTab === key;

@@ -31,12 +31,16 @@ type ViaCepResponse = {
 };
 
 export const ESPECIALIDADE_CATEGORIES = [
-  { id: "manicure_pedicure", name: "Manicure / Pedicure" },
-  { id: "cabelo", name: "Cabelo" },
-  { id: "maquiagem", name: "Maquiagem" },
-  { id: "depilacao", name: "Depilação" },
-  { id: "sobrancelha_cilios", name: "Sobrancelha / Cílios" },
-  { id: "massagem_estetica", name: "Massagem / Estética" },
+  { id: "pedicure",               name: "Pedicure" },
+  { id: "designer_sobrancelha",   name: "Designer de sobrancelha" },
+  { id: "micropigmentadora",      name: "Micropigmentadora" },
+  { id: "lash_designer",          name: "Lash Designer" },
+  { id: "cabeleleeiro",           name: "Cabeleleiro" },
+  { id: "barbeiro",               name: "Barbeiro" },
+  { id: "hair_stylist_visagista", name: "Hair Stylist / Visagista" },
+  { id: "depiladora",             name: "Depiladora" },
+  { id: "massoterapeuta",         name: "Massoterapeuta" },
+  { id: "maquiador",              name: "Maquiador" },
 ];
 
 

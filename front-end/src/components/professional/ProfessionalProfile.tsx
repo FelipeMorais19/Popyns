@@ -79,17 +79,22 @@ function formatPhone(digits: string): string {
 }
 
 const ESPECIALIDADE_LABELS: Record<string, string> = {
-  manicure_pedicure: "Manicure / Pedicure",
-  cabelo: "Cabelo",
-  maquiagem: "Maquiagem",
-  depilacao: "Depilação",
-  sobrancelha_cilios: "Sobrancelha / Cílios",
-  massagem_estetica: "Massagem / Estética",
+  pedicure:               "Pedicure",
+  designer_sobrancelha:   "Designer de sobrancelha",
+  micropigmentadora:      "Micropigmentadora",
+  lash_designer:          "Lash Designer",
+  cabeleleeiro:           "Cabeleleiro",
+  barbeiro:               "Barbeiro",
+  hair_stylist_visagista: "Hair Stylist / Visagista",
+  depiladora:             "Depiladora",
+  massoterapeuta:         "Massoterapeuta",
+  maquiador:              "Maquiador",
 };
 
 function formatEspecialidade(id: string) {
   return ESPECIALIDADE_LABELS[id] ?? id;
 }
+
 
 export function ProfessionalProfile() {
   const { user } = useUser();
